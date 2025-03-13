@@ -1,5 +1,6 @@
-package app.category.model;
+package app.recurring_task.model;
 
+import app.notification.model.NotificationType;
 import app.task.model.Task;
 import app.user.model.User;
 import jakarta.persistence.*;
@@ -8,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,19 +17,19 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class RecurringTask {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @ManyToOne
-    private User user;
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Task task;
     @Column(nullable = false)
-    private String name;
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-    private boolean isDeleted;
-    @OneToMany
-    private List<Task> tasks;
+    @Enumerated(EnumType.STRING)
+    private RecurringTaskType type;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    @Column(nullable = true)
+    private Integer maxOccurrences=1000;
+
 }
