@@ -10,6 +10,7 @@ public class HomeController {
     public ModelAndView getHomePage(){
         ModelAndView model=new ModelAndView();
         model.setViewName("home");
+        model.addObject("title", "Home");
         return model;
     }
 }
