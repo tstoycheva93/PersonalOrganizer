@@ -38,6 +38,9 @@ public class Task {
     private Category category;
 
     @Column(nullable = false)
+    private LocalDateTime startDate;
+
+    @Column(nullable = false)
     private LocalDateTime dueDate;
 
     @Column(nullable = false)
@@ -49,6 +52,12 @@ public class Task {
     private TaskStatus status;
 
     private boolean isRecurring;
+
+    private boolean hasReminder;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TaskReminder reminder;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

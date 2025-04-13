@@ -38,6 +38,9 @@ public class Category {
 
     private boolean isDeleted;
 
+    @Column(nullable = false)
+    private String color="#000000";
+
     @OneToMany(mappedBy = "category")
     private List<Task> tasks;
 }
