@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly</title>
+    <link href="/css/client/calendar.css" rel="stylesheet">
+    <link href="/css/client/sidebar.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS Bundle (required for modal) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+       <th:block th:insert="fragments/menu :: client-menu"></th:block>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search tasks...">
+                </div>
+                <button class="notifications has-unread" id="notificationsBtn" data-bs-toggle="modal" data-bs-target="#notificationsModal" >
+                    <span>🔔</span>
+                </button>
+            </div>
+
+            <div class="calendar">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button id="prevMonth">←</button>
+                        <div class="current-month">March 2024</div>
+                        <button id="nextMonth">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Mon</div>
+                    <div class="calendar-day-header">Tue</div>
+                    <div class="calendar-day-header">Wed</div>
+                    <div class="calendar-day-header">Thu</div>
+                    <div class="calendar-day-header">Fri</div>
+                    <div class="calendar-day-header">Sat</div>
+                    <div class="calendar-day-header">Sun</div>
+                </div>
+            </div>
+
+            <div class="task-preview">
+                <div class="task-preview-header">
+                    <h3>Tasks for <span class="selected-date">Today</span></h3>
+                </div>
+                <div class="task-list">
+                    <!-- Tasks will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div class="modal fade" id="notificationsModal">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Notifications</h3>
+                <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="notifications-list">
+                <div class="notification-item">
+                    <div class="notification-icon">📅</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Meeting Reminder</div>
+                        <div class="notification-text">Team meeting starts in 30 minutes</div>
+                        <div class="notification-time">10 minutes ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    <script>
+        // Sample tasks data
+        const tasksData = {
+            [new Date().toISOString().split('T')[0]]: [
+                {
+                    time: '09:00',
+                    title: 'Team Meeting',
+                    category: 'work',
+                    status: 'pending'
+                },
+                {
+                    time: '11:30',
+                    title: 'JavaScript Course',
+                    category: 'study',
+                    status: 'done'
+                },
+                {
+                    time: '14:00',
+                    title: 'Gym Session',
+                    category: 'personal',
+                    status: 'pending'
+                },
+                {
+                    time: '16:30',
+                    title: 'Grocery Shopping',
+                    category: 'shopping',
+                    status: 'pending'
+                }
+            ]
+        };
+
+        // Function to update task list
+        function updateTaskList(date) {
+            const taskList = document.querySelector('.task-list');
+            const selectedDate = document.querySelector('.selected-date');
+            const dateStr = date.toISOString().split('T')[0];
+            const tasks = tasksData[dateStr] || [];
+            
+            // Update header
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            selectedDate.textContent = date.toLocaleDateString('en-US', options);
+            
+            // Clear existing tasks
+            taskList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                taskList.innerHTML = '<div class="task-item" style="justify-content: center">No tasks for this day</div>';
+                return;
+            }
+            
+            // Add tasks
+            tasks.forEach(task => {
+                const taskElement = document.createElement('div');
+                taskElement.className = `task-item category-${task.category}`;
+                taskElement.innerHTML = `
+                    <div class="category-indicator"></div>
+                    <div class="task-time">${task.time}</div>
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-status status-${task.status}"></div>
+                `;
+                taskList.appendChild(taskElement);
+            });
+        }
+
+        function generateCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const calendarGrid = document.querySelector('.calendar-grid');
+            const currentMonth = document.querySelector('.current-month');
+            const today = new Date();
+            
+            // Clear existing calendar days (except headers)
+            const headers = Array.from(calendarGrid.querySelectorAll('.calendar-day-header'));
+            calendarGrid.innerHTML = '';
+            headers.forEach(header => calendarGrid.appendChild(header));
+
+            // Set month name
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            currentMonth.textContent = `${monthNames[month]} ${year}`;
+
+            // Add empty cells for days before the first day of the month
+            let firstDayIndex = firstDay.getDay() || 7;
+            for (let i = 1; i < firstDayIndex; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+
+            // Add calendar days
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayElement = document.createElement('div');
+                const currentDate = new Date(year, month, day);
+                const taskCount = Math.floor(Math.random() * 5 + 1);
+                
+                if (taskCount > 3) {
+                    dayElement.className = 'calendar-day load-high';
+                } else if (taskCount > 1) {
+                    dayElement.className = 'calendar-day load-medium';
+                } else {
+                    dayElement.className = 'calendar-day load-low';
+                }
+                
+                // Add today class if it's today
+                if (currentDate.toDateString() === today.toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                dayElement.innerHTML = `
+                    <div class="date">${day}</div>
+                    <div class="task-count">${taskCount} tasks</div>
+                `;
+
+                // Add click event
+                dayElement.addEventListener('click', () => {
+                    document.querySelectorAll('.calendar-day').forEach(day => {
+                        day.classList.remove('selected');
+                    });
+                    dayElement.classList.add('selected');
+                    updateTaskList(currentDate);
+                });
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        // Initialize calendar and tasks
+        let currentDate = new Date();
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        updateTaskList(currentDate); // Show today's tasks initially
+
+        // Add month navigation
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+
+
+        window.addEventListener('click', (e) => {
+            if (e.target === notificationsModal) {
+                notificationsModal.classList.remove('active');
+            }
+            if (e.target === addTaskModal) {
+                addTaskModal.classList.remove('active');
+            }
+        });
+
+        // Task form submission
+        const taskForm = document.querySelector('.task-form');
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(taskForm);
+            const taskData = Object.fromEntries(formData.entries());
+            
+            // Add the new task to the tasksData
+            const dueDate = new Date(taskData.taskDueDate);
+            const dateStr = dueDate.toISOString().split('T')[0];
+            
+            if (!tasksData[dateStr]) {
+                tasksData[dateStr] = [];
+            }
+            
+            tasksData[dateStr].push({
+                time: '00:00',
+                title: taskData.taskTitle,
+                category: taskData.taskCategory,
+                status: 'pending'
+            });
+            
+            // Update the task list if we're viewing that date
+            if (currentDate.toISOString().split('T')[0] === dateStr) {
+                updateTaskList(currentDate);
+            }
+            
+            alert('Task created successfully!');
+            addTaskModal.classList.remove('active');
+            taskForm.reset();
+        });
+
+        // Add notification state management
+        let hasUnreadNotifications = true;
+
+        function updateNotificationState() {
+            const notificationsBtn = document.getElementById('notificationsBtn');
+            if (hasUnreadNotifications) {
+                notificationsBtn.classList.add('has-unread');
+            } else {
+                notificationsBtn.classList.remove('has-unread');
+            }
+        }
+
+        // Update notification state when clicking the button
+        notificationsBtn.addEventListener('click', () => {
+            hasUnreadNotifications = false;
+            updateNotificationState();
+            notificationsModal.classList.add('active');
+        });
+    </script>
+</body>
+</html>

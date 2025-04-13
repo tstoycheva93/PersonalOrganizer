@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - Subscription Details</title>
+    <link href="/css/client/subscriptions.css" rel="stylesheet">
+    <link href="/css/client/sidebar.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <th:block th:insert="fragments/menu :: client-menu"></th:block>
+    <div class="main-content">
+        <div class="subscription-details">
+            <h2 class="page-title">Subscription Details</h2>
+
+            <div class="user-info">
+                <h3>Username</h3>
+                <p>username</p>
+            </div>
+
+            <div class="current-plan">
+                <h3>📦 Your Current Plan</h3>
+                <div class="plan-details">
+                    <div>
+                        <h4>Current plan</h4>
+                        <p>Free Plan</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" id="billingBtn" data-bs-toggle = "modal" data-bs-target="#billingModal">Billing details →</button>
+                        <button class="btn btn-outline" id="plansBtn" data-bs-toggle = "modal" data-bs-target="#plansModal">See available plans →</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-danger">Unsubscribe now</button>
+        </div>
+    </div>
+</div>
+
+<!-- Billing Details Modal -->
+<div class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="billingModalLabel">Billing Details</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>No billing information available for Free Plan.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Available Plans Modal -->
+<div class="modal fade" id="plansModal" tabindex="-1" aria-labelledby="plansModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="plansModalLabel">Available Plans</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="plans-grid">
+                    <div class="plan-card">
+                        <h4>Free Plan</h4>
+                        <div class="price">$0/mo</div>
+                        <ul>
+                            <li>Up to 10 tasks</li>
+                            <li>Basic calendar</li>
+                            <li>Email support</li>
+                        </ul>
+                        <button class="btn btn-primary" disabled>Current Plan</button>
+                    </div>
+                    <div class="plan-card">
+                        <h4>Pro Plan</h4>
+                        <div class="price">$9.99/mo</div>
+                        <ul>
+                            <li>Unlimited tasks</li>
+                            <li>Advanced calendar</li>
+                            <li>Priority support</li>
+                            <li>Team collaboration</li>
+                        </ul>
+                        <button class="btn btn-primary">Upgrade Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html> 

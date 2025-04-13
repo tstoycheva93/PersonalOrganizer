@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - Modern Task Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/index/index.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="#" class="logo">
+                <span>✨</span> Taskly
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="/login" class="nav-link">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Organize Your Life with Taskly</h1>
+            <p>A modern task management solution that helps you stay productive and focused on what matters most.</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn btn-primary">Get Started</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title" style="text-align: center; margin-bottom: 3rem; color: var(--text-color);">Why Choose Taskly?</h2>
+            <div class="features-grid">
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">📅</div>
+                    <h3 class="feature-title">Smart Calendar</h3>
+                    <p class="feature-description">Visualize your tasks in a beautiful calendar interface with priority-based task display.</p>
+                    </div>
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">📝</div>
+                    <h3 class="feature-title">Task Management</h3>
+                    <p class="feature-description">Organize tasks by category, priority, and due date with an intuitive interface.</p>
+                </div>
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Goal Tracking</h3>
+                    <p class="feature-description">Set and track your goals with progress indicators and milestone celebrations.</p>
+                </div>
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Analytics</h3>
+                    <p class="feature-description">Get insights into your productivity patterns and task completion rates.</p>
+            </div>
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3 class="feature-title">Smart Notifications</h3>
+                    <p class="feature-description">Never miss a deadline with intelligent reminders and notifications.</p>
+                </div>
+                <div class="feature-card glass-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Sync Everywhere</h3>
+                    <p class="feature-description">Access your tasks from any device with real-time synchronization.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Taskly</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">Your personal task management solution for a more organized life.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="LinkedIn">💼</a>
+                    <a href="#" aria-label="GitHub">📦</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Sign Up</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Taskly. All rights reserved.</p>
+    </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(255, 255, 255, 0.1)';
+                nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+            } else {
+                nav.style.background = 'transparent';
+                nav.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

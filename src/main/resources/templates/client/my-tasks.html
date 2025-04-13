@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - My Tasks</title>
+    <!-- Bootstrap CSS (usually in the <head>) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS Bundle (required for modal) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link href="/css/client/my-tasks.css" rel="stylesheet">
+    <link href="/css/client/sidebar.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <th:block th:insert="fragments/menu :: client-menu"></th:block>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search tasks...">
+            </div>
+            <select class="sort-dropdown">
+                <option value="priority">Sort by Priority</option>
+                <option value="due-date">Sort by Due Date</option>
+                <option value="category">Sort by Category</option>
+            </select>
+            <div class="view-controls">
+                <button class="view-btn active" data-view="board">
+                    <span>📋</span> Board
+                </button>
+                <button class="view-btn" data-view="list">
+                    <span>📝</span> List
+                </button>
+            </div>
+        </div>
+
+        <div class="categories-section">
+            <div class="categories-header">
+                <h3>Categories</h3>
+                <button class="view-btn"  data-bs-toggle="modal" data-bs-target="#categoryModal">
+                    <span>➕</span> New Category
+                </button>
+            </div>
+            <div class="categories-list">
+                <div class="category-pill work active">Work</div>
+                <div class="category-pill personal">Personal</div>
+                <div class="category-pill shopping">Shopping</div>
+                <div class="category-pill health">Health</div>
+            </div>
+        </div>
+
+        <div class="board-view" >
+            <div class="board-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span>📋</span> To Do
+                        <span class="task-count">3</span>
+                    </div>
+                </div>
+                <div class="task-card" data-bs-toggle="modal" data-bs-target="#taskPreviewModal">
+                    <div class="task-header">
+                        <div class="task-title">Design new landing page</div>
+                        <span class="task-category category-work">Work</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="task-due">
+                            <span>📅</span> Today
+                        </div>
+                        <span class="priority-high">⚡ High</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="board-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span>🔄</span> In Progress
+                        <span class="task-count">2</span>
+                    </div>
+                </div>
+                <div class="task-card">
+                    <div class="task-header">
+                        <div class="task-title">Weekly report</div>
+                        <span class="task-category category-work">Work</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="task-due">
+                            <span>📅</span> Today
+                        </div>
+                        <span class="priority-medium">⚡ Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-column">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span>✅</span> Completed
+                        <span class="task-count">1</span>
+                    </div>
+                </div>
+                <div class="task-card">
+                    <div class="task-header">
+                        <div class="task-title">Morning workout</div>
+                        <span class="task-category category-health">Health</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="task-due">
+                            <span>📅</span> Today
+                        </div>
+                        <span class="priority-medium">⚡ Medium</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-view">
+            <div class="list-header">
+                <div>Task</div>
+                <div>Category</div>
+                <div>Due Date</div>
+                <div>Priority</div>
+                <div>Status</div>
+            </div>
+            <!-- List view tasks will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<button class="action-btn" id="addTaskBtn" data-bs-toggle="modal" data-bs-target="#taskModal">
+    <span>➕</span> Add Task
+</button>
+
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Task</h5>
+                <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/tasks/save}" th:method="POST">
+                    <div class="form-group form-full-width">
+                        <label for="taskTitle">Title</label>
+                        <input type="text" id="taskTitle"  class="form-control" placeholder="Enter task title" required>
+                    </div>
+                    <div class="form-group form-full-width">
+                        <label for="taskDescription">Description</label>
+                        <textarea id="taskDescription" class="form-control" placeholder="Enter task description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskCategory">Category</label>
+                        <select id="taskCategory"  class="form-control" required>
+                            <option value="">Select category</option>
+                            <option value="1">Work</option>
+                            <option value="2">Personal</option>
+                            <option value="3">Shopping</option>
+                            <option value="4">Health</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date</label>
+                        <input type="date" id="taskDueDate"  class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <div class="toggle-group" id="priorityToggle">
+                            <button type="button" class="toggle-btn" data-value="low">Low</button>
+                            <button type="button" class="toggle-btn active" data-value="medium">Medium</button>
+                            <button type="button" class="toggle-btn" data-value="high">High</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="toggle-group" id="statusToggle">
+                            <button type="button" class="toggle-btn active" data-value="todo">To Do</button>
+                            <button type="button" class="toggle-btn" data-value="in_progress">In Progress</button>
+                            <button type="button" class="toggle-btn" data-value="completed">Completed</button>
+                        </div>
+                    </div>
+                    <div class="form-group form-full-width">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isRecurring" > This is a recurring task
+                        </label>
+                        <div class="recurring-options" id="recurringOptions">
+                            <div class="form-group">
+                                <label for="recurringType">Recurring Type</label>
+                                <select id="recurringType"  class="form-control">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">End Occurrence</label>
+                                <input type="date" id="endDate"  class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Create Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Category</h5>
+                <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/categories/save}" th:method="POST" th:object="${categoryRequest}">
+                    <div class="form-group">
+                        <label for="categoryName">Category Name</label>
+                        <input type="text" id="categoryName"  class="form-control" placeholder="Enter category name">
+                    </div>
+                    <div class="form-group">
+                        <label>Choose Color</label>
+                        <div class="color-picker">
+                            <div class="color-option" style="background: #4361EE" data-color="#4361EE"></div>
+                            <div class="color-option" style="background: #FF6B6B" data-color="#FF6B6B"></div>
+                            <div class="color-option" style="background: #FFB86C" data-color="#FFB86C"></div>
+                            <div class="color-option" style="background: #2ECC71" data-color="#2ECC71"></div>
+                            <div class="color-option" style="background: #9B59B6" data-color="#9B59B6"></div>
+                            <div class="color-option" style="background: #3498DB" data-color="#3498DB"></div>
+                            <div class="color-option" style="background: #E74C3C" data-color="#E74C3C"></div>
+                            <div class="color-option" style="background: #1ABC9C" data-color="#1ABC9C"></div>
+                        </div>
+                        <input type="hidden" id="selectedColor" >
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" >Create Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Task Preview/Edit Modal -->
+<div class="modal fade" id="taskPreviewModal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Task Details</h5>
+                <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/tasks/save}" th:method="POST" >
+                    <div class="form-group form-full-width">
+                        <label for="previewTaskTitle">Title</label>
+                        <input type="text" id="previewTaskTitle"  class="form-control">
+                    </div>
+                    <div class="form-group form-full-width">
+                        <label for="previewTaskDescription">Description</label>
+                        <textarea id="previewTaskDescription"  class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="previewTaskCategory">Category</label>
+                        <select id="previewTaskCategory"  class="form-control">
+                            <option value="">Select category</option>
+                            <option value="1">Work</option>
+                            <option value="2">Personal</option>
+                            <option value="3">Shopping</option>
+                            <option value="4">Health</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="previewTaskDueDate">Due Date</label>
+                        <input type="date" id="previewTaskDueDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <div class="toggle-group" id="previewPriorityToggle">
+                            <button type="button" class="toggle-btn" data-value="low">Low</button>
+                            <button type="button" class="toggle-btn" data-value="medium">Medium</button>
+                            <button type="button" class="toggle-btn" data-value="high">High</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="toggle-group" id="previewStatusToggle">
+                            <button type="button" class="toggle-btn" data-value="todo">To Do</button>
+                            <button type="button" class="toggle-btn" data-value="in_progress">In Progress</button>
+                            <button type="button" class="toggle-btn" data-value="completed">Completed</button>
+                        </div>
+                    </div>
+                    <div class="form-group form-full-width">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="previewIsRecurring" > This is a recurring task
+                        </label>
+                        <div class="recurring-options" id="previewRecurringOptions">
+                            <div class="form-group">
+                                <label for="previewRecurringType">Recurring Type</label>
+                                <select id="previewRecurringType" class="form-control">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="previewEndDate">End Occurrence</label>
+                                <input type="date" id="previewEndDate"  class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <!--<button type="button" class="btn-primary" id="deleteTaskBtn" style="background-color: var(--danger-color);" th:onclick="'deleteTask('+${task.id}+')'">Delete Task</button>-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+
+    // Function to delete task
+    // function deleteTask(taskId) {
+    //     if (confirm('Are you sure you want to delete this task?')) {
+    //         const modal = bootstrap.Modal.getInstance(document.getElementById('taskPreviewModal'));
+    //         modal.hide();
+    //     }
+    // }
+
+    // Add click handlers to task cards
+    function addTaskClickHandlers() {
+        // Board view task cards
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const taskId = parseInt(card.dataset.taskId);
+                openTaskPreview(taskId);
+            });
+        });
+
+        // List view task rows
+        document.querySelectorAll('.list-task').forEach(row => {
+            row.addEventListener('click', () => {
+                const taskId = parseInt(row.dataset.taskId);
+                openTaskPreview(taskId);
+            });
+        });
+    }
+
+    // Initialize task click handlers
+    addTaskClickHandlers();
+
+    // View switching
+    const viewButtons = document.querySelectorAll('.view-btn[data-view]');
+    const boardView = document.querySelector('.board-view');
+    const listView = document.querySelector('.list-view');
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            if (button.dataset.view === 'board') {
+                boardView.style.display = 'flex';
+                listView.style.display = 'none';
+            } else {
+                boardView.style.display = 'none';
+                listView.style.display = 'block';
+            }
+        });
+    });
+
+    // Recurring task options
+    const isRecurringCheckbox = document.getElementById('isRecurring');
+    const recurringOptions = document.getElementById('recurringOptions');
+    const previewIsRecurringCheckbox = document.getElementById('previewIsRecurring');
+    const previewRecurringOptions = document.getElementById('previewRecurringOptions');
+
+    if (isRecurringCheckbox) {
+        isRecurringCheckbox.addEventListener('change', () => {
+            recurringOptions.classList.toggle('visible', isRecurringCheckbox.checked);
+        });
+    }
+
+    if (previewIsRecurringCheckbox) {
+        previewIsRecurringCheckbox.addEventListener('change', () => {
+            previewRecurringOptions.classList.toggle('visible', previewIsRecurringCheckbox.checked);
+        });
+    }
+
+    // Color picker functionality
+    const colorOptions = document.querySelectorAll('.color-option');
+    const selectedColorInput = document.getElementById('selectedColor');
+    let selectedColor = null;
+
+    colorOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            colorOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            selectedColor = option.dataset.color;
+            if (selectedColorInput) {
+                selectedColorInput.value = selectedColor;
+            }
+        });
+    });
+
+    // Toggle buttons functionality
+    function setupToggleGroup(groupId) {
+        const group = document.getElementById(groupId);
+        if (!group) return;
+
+        const buttons = group.querySelectorAll('.toggle-btn');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+    }
+
+    // Initialize toggle groups
+    document.querySelectorAll('.toggle-group').forEach(group => {
+        const buttons = group.querySelectorAll('.toggle-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+    });
+</script>
+</body>
+</html> 

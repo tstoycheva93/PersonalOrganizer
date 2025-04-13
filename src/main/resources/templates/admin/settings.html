@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - System Settings</title>
+    <link href="/css/admin/settings.css" rel="stylesheet">
+        <link href="/css/admin/adminSidebar.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <th:block th:insert="fragments/menu :: admin-menu"></th:block>
+        <div class="main-content">
+            <div class="settings-section">
+                <h2 class="section-title">System Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <div class="setting-header">
+                            <h3 class="setting-title">Maintenance Mode</h3>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="setting-description">Enable maintenance mode to temporarily disable access to the application for all users except administrators.</p>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-header">
+                            <h3 class="setting-title">User Registration</h3>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="setting-description">Allow or restrict new user registrations on the platform.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2 class="section-title">Email Configuration</h2>
+                <form id="emailConfigForm">
+                    <div class="form-group">
+                        <label for="smtpHost">SMTP Host</label>
+                        <input type="text" id="smtpHost" value="smtp.example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpPort">SMTP Port</label>
+                        <input type="number" id="smtpPort" value="587">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpUsername">SMTP Username</label>
+                        <input type="text" id="smtpUsername" value="noreply@taskly.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpPassword">SMTP Password</label>
+                        <input type="password" id="smtpPassword" placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailTemplate">Default Email Template</label>
+                        <textarea id="emailTemplate">Welcome to Taskly! We're excited to have you on board.</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Email Settings</button>
+                </form>
+            </div>
+
+          
+        </div>
+    </div>
+
+    <script>
+        // Toggle switch functionality
+        document.querySelectorAll('.toggle-switch input').forEach(switchInput => {
+            switchInput.addEventListener('change', (e) => {
+                console.log('Setting changed:', e.target.checked);
+            });
+        });
+
+        // Form submission
+        document.getElementById('emailConfigForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Email settings saved');
+        });
+
+        // Backup functionality
+        document.querySelector('.btn-primary').addEventListener('click', () => {
+            console.log('Creating backup...');
+        });
+
+        // Restore functionality
+        document.querySelector('.btn-warning').addEventListener('click', () => {
+            const fileInput = document.getElementById('backupFile');
+            if (fileInput.files.length > 0) {
+                console.log('Restoring from backup...');
+            }
+        });
+    </script>
+</body>
+</html> 

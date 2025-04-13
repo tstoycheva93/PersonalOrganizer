@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - Analytics</title>
+    <link href="/css/admin/analytics.css" rel="stylesheet">
+       <link href="/css/admin/adminSidebar.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <th:block th:insert="fragments/menu :: admin-menu"></th:block>
+
+
+        <div class="main-content">
+            <div class="analytics-section">
+                <h2 class="section-title">Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-value">1,234</div>
+                        <div class="stat-change positive">
+                            <span>↑</span> 12% from last month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Active Users</div>
+                        <div class="stat-value">987</div>
+                        <div class="stat-change positive">
+                            <span>↑</span> 8% from last month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Tasks Created</div>
+                        <div class="stat-value">12,345</div>
+                        <div class="stat-change positive">
+                            <span>↑</span> 15% from last month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Completion Rate</div>
+                        <div class="stat-value">78%</div>
+                        <div class="stat-change negative">
+                            <span>↓</span> 2% from last month
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-section">
+                <h2 class="section-title">User Growth</h2>
+                <div class="time-filter">
+                    <button class="time-filter-btn">7 Days</button>
+                    <button class="time-filter-btn active">30 Days</button>
+                    <button class="time-filter-btn">90 Days</button>
+                    <button class="time-filter-btn">1 Year</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <div class="analytics-section">
+                <h2 class="section-title">Task Analytics</h2>
+                <div class="chart-container">
+                    <canvas id="taskAnalyticsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="analytics-section">
+                <h2 class="section-title">Recent Activity</h2>
+                <button class="export-btn">Export Data</button>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mar 15, 2024</td>
+                                <td>John Doe</td>
+                                <td>Task Created</td>
+                                <td>Created new task "Project Planning"</td>
+                            </tr>
+                            <tr>
+                                <td>Mar 15, 2024</td>
+                                <td>Jane Smith</td>
+                                <td>Task Completed</td>
+                                <td>Completed task "Design Review"</td>
+                            </tr>
+                            <tr>
+                                <td>Mar 14, 2024</td>
+                                <td>Bob Johnson</td>
+                                <td>Account Created</td>
+                                <td>New user registration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User Growth Chart
+        const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+        const userGrowthChart = new Chart(userGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'New Users',
+                    data: [65, 59, 80, 81, 56, 55],
+                    borderColor: '#00B4D8',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(0, 180, 216, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Task Analytics Chart
+        const taskAnalyticsCtx = document.getElementById('taskAnalyticsChart').getContext('2d');
+        const taskAnalyticsChart = new Chart(taskAnalyticsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Tasks Created',
+                    data: [12, 19, 3, 5, 2, 3, 7],
+                    backgroundColor: '#00B4D8'
+                }, {
+                    label: 'Tasks Completed',
+                    data: [8, 15, 2, 4, 1, 2, 5],
+                    backgroundColor: '#2ECC71'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Time filter functionality
+        document.querySelectorAll('.time-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Here you would typically update the chart data based on the selected time period
+                console.log('Time period changed:', btn.textContent);
+            });
+        });
+
+        // Export functionality
+        document.querySelector('.export-btn').addEventListener('click', () => {
+            console.log('Exporting data...');
+        });
+    </script>
+</body>
+</html> 

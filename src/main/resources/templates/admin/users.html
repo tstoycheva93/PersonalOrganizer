@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - User Management</title>
+    <link href="/css/admin/users.css" rel="stylesheet">
+        <link href="/css/admin/adminSidebar.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <th:block th:insert="fragments/menu :: admin-menu"></th:block>
+        <div class="main-content">
+            <div class="admin-header">
+                <h1>User Management</h1>
+            </div>
+            <div class="filters-section">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="filter-input" placeholder="Search users...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Subscription</label>
+                        <select class="filter-select">
+                            <option value="">All Plans</option>
+                            <option value="free">Free</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By</label>
+                        <select class="filter-select">
+                            <option value="name">Name</option>
+                            <option value="date">Date Joined</option>
+                            <option value="subscription">Subscription</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subscription</th>
+                            <th>Status</th>
+                            <th>Joined Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1234</td>
+                            <td>John Doe</td>
+                            <td>john@example.com</td>
+                            <td><span class="subscription-badge subscription-premium">Premium</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Mar 15, 2024</td>
+                            <td>
+                                <button class="btn btn-primary edit-user-btn" data-user-id="1234">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1235</td>
+                            <td>Jane Smith</td>
+                            <td>jane@example.com</td>
+                            <td><span class="subscription-badge subscription-free">Free</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Mar 14, 2024</td>
+                            <td>
+                                <button class="btn btn-primary edit-user-btn" data-user-id="1235">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#1236</td>
+                            <td>Bob Johnson</td>
+                            <td>bob@example.com</td>
+                            <td><span class="subscription-badge subscription-premium">Premium</span></td>
+                            <td><span class="status-badge status-inactive">Inactive</span></td>
+                            <td>Mar 13, 2024</td>
+                            <td>
+                                <button class="btn btn-primary edit-user-btn" data-user-id="1236">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit User</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="editUserForm">
+                <div class="form-group">
+                    <label for="editName">Name</label>
+                    <input type="text" id="editName"  readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editSubscription">Subscription</label>
+                    <select id="editSubscription" required>
+                        <option value="free">Free</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editStatus">Status</label>
+                    <select id="editStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-danger" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const editUserModal = document.getElementById('editUserModal');
+        const editUserForm = document.getElementById('editUserForm');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelEditBtn = document.getElementById('cancelEdit');
+        const editUserBtns = document.querySelectorAll('.edit-user-btn');
+
+        function openEditModal(userId) {
+            // Here you would typically fetch user data from your backend
+            // For now, we'll just show the modal
+            editUserModal.classList.add('active');
+        }
+
+        function closeEditModal() {
+            editUserModal.classList.remove('active');
+        }
+
+        editUserBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const userId = btn.dataset.userId;
+                openEditModal(userId);
+            });
+        });
+
+        closeModalBtn.addEventListener('click', closeEditModal);
+        cancelEditBtn.addEventListener('click', closeEditModal);
+
+        editUserForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would typically send the updated data to your backend
+            closeEditModal();
+        });
+
+        // Filter functionality
+        const searchInput = document.querySelector('.filter-input');
+        const statusFilter = document.querySelector('select[placeholder="Status"]');
+        const subscriptionFilter = document.querySelector('select[placeholder="Subscription"]');
+        const sortFilter = document.querySelector('select[placeholder="Sort By"]');
+
+        function applyFilters() {
+            // Here you would typically filter the table data
+            console.log('Applying filters...');
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        statusFilter.addEventListener('change', applyFilters);
+        subscriptionFilter.addEventListener('change', applyFilters);
+        sortFilter.addEventListener('change', applyFilters);
+    </script>
+</body>
+</html> 
