@@ -1,8 +1,8 @@
+// src/main/java/app/notification/model/Notification.java
 package app.notification.model;
 
 import app.task.model.Task;
 import app.user.model.User;
-import app.user.model.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,21 +21,31 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private NotificationType type;
+
     @Column(nullable = false)
     private String body;
+
     @ManyToOne
+    @JoinColumn(name = "task_id", nullable = false)
     private Task task;
+
     @Column(nullable = false)
     private String subject;
+
     private boolean isDeleted;
     private boolean isRead;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

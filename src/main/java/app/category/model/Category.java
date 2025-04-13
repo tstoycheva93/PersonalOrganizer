@@ -1,3 +1,4 @@
+// src/main/java/app/category/model/Category.java
 package app.category.model;
 
 import app.task.model.Task;
@@ -21,17 +22,25 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
     @Column(nullable = false)
     private String name;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
     private boolean isDeleted;
-    @OneToMany
-    private List<Task> tasks;
+
     @Column(nullable = false)
-    private String color;
+    private String color="#000000";
+
+    @OneToMany(mappedBy = "category")
+    private List<Task> tasks;
 }
