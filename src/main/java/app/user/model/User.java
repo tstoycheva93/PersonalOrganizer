@@ -24,9 +24,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(nullable = false)
-    private String firstName;
-    @Column(nullable = false)
-    private String lastName;
+    private String name;
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false, unique = true)
@@ -38,7 +36,7 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    private boolean isActive;
+    private boolean active;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -49,5 +47,8 @@ public class User {
     private List<Notification> notifications;
     @OneToMany
     private List<Category> categories;
+    
+    private int subscriptionCount;
+
 
 }

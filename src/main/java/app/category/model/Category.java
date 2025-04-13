@@ -32,4 +32,6 @@ public class Category {
     private boolean isDeleted;
     @OneToMany
     private List<Task> tasks;
+    @Column(nullable = false)
+    private String color;
 }

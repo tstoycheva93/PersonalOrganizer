@@ -26,7 +26,9 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @OneToOne
-    private User user;
+    private User createdBy;
+    @OneToOne
+    private User changedBy;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -47,6 +49,7 @@ public class Task {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     private boolean isDeleted;
-    @OneToOne
-    private RecurringTask recurringTask;
+    private LocalDateTime completedAt;
+
+
 }

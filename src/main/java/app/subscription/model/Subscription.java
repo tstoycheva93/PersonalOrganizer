@@ -24,9 +24,6 @@ public class Subscription {
     private User user;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private SubscriptionStatus status;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private SubscriptionPeriod period;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -34,6 +31,8 @@ public class Subscription {
     @Column(nullable = false)
     private BigDecimal price;
     private boolean renewable;
+    @CreationTimestamp
     private LocalDateTime createdAt;
+    @UpdateTimestamp
     private LocalDateTime completedAt;
 }
