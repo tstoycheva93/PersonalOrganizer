@@ -58,9 +58,6 @@ body {
 }
 
 
-
-
-
 .header {
     display: flex;
     justify-content: space-between;
@@ -312,6 +309,10 @@ body {
     width: 4px;
 }
 
+.task-item.category {
+    background-color: #00B4D8;
+}
+
 .task-item.category-work {
     background: var(--hover-light);
 }
@@ -366,10 +367,26 @@ body {
     flex: 1;
 }
 
-.task-status {
+.task-status-high {
     width: 10px;
     height: 10px;
     border-radius: 50%;
+    background-color: red;
+}
+
+.task-status-medium {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: yellow;
+}
+
+
+.task-status-low {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
 }
 
 .status-done {
@@ -411,6 +428,10 @@ body {
 
 .category-shopping .category-indicator {
     background: var(--category-shopping);
+}
+
+.category-custom .category-indicator {
+    background-color: #00B4D8;
 }
 
 /* Update task list to show categories */
@@ -457,25 +478,6 @@ body {
     font-weight: 500;
 }
 
-
-
-/* Modal styles
-.modal {
-   display: none;
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   width: 100%;
-  height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    align-items: center;
-   justify-content: center;
-   /* z-index: 1001;} */
-
-
-/*.modal.active {*/
-/*    display: flex;*/
-/*}*/
 
 .modal-content {
     background: white;
