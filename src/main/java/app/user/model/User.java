@@ -31,7 +31,7 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column()
     private String photoPath;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

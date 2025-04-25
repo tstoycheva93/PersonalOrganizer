@@ -70,10 +70,10 @@
             <div class="notifications-list">
                 <div class="notification-item">
                     <div class="notification-icon">📅</div>
-                    <div class="notification-content">
-                        <div class="notification-title">Meeting Reminder</div>
-                        <div class="notification-text">Team meeting starts in 30 minutes</div>
-                        <div class="notification-time">10 minutes ago</div>
+                    <div th:each="notification, stat : ${user.getNotifications()}" class="notification-content">
+                        <div class="notification-title" th:text="${notification.subject}">Meeting Reminder</div>
+                        <div class="notification-text" th:text="${notification.body}">Team meeting starts in 30 minutes</div>
+                        <div class="notification-time" th:text="${dates[stat.index]}">10 minutes ago</div>
                     </div>
                 </div>
             </div>
@@ -83,36 +83,26 @@
 
 
 
-    <script>
-        // Sample tasks data
-        const tasksData = {
-            [new Date().toISOString().split('T')[0]]: [
-                {
-                    time: '09:00',
-                    title: 'Team Meeting',
-                    category: 'work',
-                    status: 'pending'
-                },
-                {
-                    time: '11:30',
-                    title: 'JavaScript Course',
-                    category: 'study',
-                    status: 'done'
-                },
-                {
-                    time: '14:00',
-                    title: 'Gym Session',
-                    category: 'personal',
-                    status: 'pending'
-                },
-                {
-                    time: '16:30',
-                    title: 'Grocery Shopping',
-                    category: 'shopping',
-                    status: 'pending'
-                }
-            ]
-        };
+    <script th:inline="javascript">
+        const tasksData = {};
+
+        /*[[# th:each="category : ${user.categories}"]]*/
+        /*[[# th:each="task : ${category.tasks}"]]*/
+        (function() {
+            let date = /*[[${task.date}]]*/ "2025-01-01";
+            if (!tasksData[date]) {
+                tasksData[date] = [];
+            }
+
+            tasksData[date].push({
+                time: /*[[${task.time}]]*/ "00:00",
+                title: /*[[${task.title}]]*/ "Untitled",
+                category: /*[[${category.name}]]*/ "general",
+                status: /*[[${task.status}]]*/ "pending"
+            });
+        })();
+        /*[/]*/
+        /*[/]*/
 
         // Function to update task list
         function updateTaskList(date) {

@@ -19,31 +19,27 @@
         </div>
             <h1 class="form-title">Create your account</h1>
             
-            <form id="signup-form">
+            <form id="signup-form" th:action="@{'/register'}" th:object="${request}" th:method="POST">
                 <div class="name-fields">
                     <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" required>
+                        <label for="firstName">Name</label>
+                        <input th:field="*{name}" type="text" id="firstName" name="firstName" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input th:field="*{email}" type="email" id="email" name="email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+                    <input th:field="*{username}" type="text" id="username" name="username" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <input th:field="*{password}" type="password" id="password" name="password" required>
                     <div class="password-strength">
                         <div class="password-strength-bar"></div>
                     </div>
@@ -60,7 +56,7 @@
 
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <input th:field="*{confirmPassword}" type="password" id="confirmPassword" name="confirmPassword" required>
                 </div>
 
                 <div class="terms-group">
@@ -78,7 +74,7 @@
             </p>
 
             <div class="login-link" style="text-align: center; margin-top: 1.5rem;">
-                Already have an account? <a href="login.html" style="color: var(--primary-dark); text-decoration: none; font-weight: 500;">Log in instead</a>
+                Already have an account? <a href="/login" style="color: var(--primary-dark); text-decoration: none; font-weight: 500;">Log in instead</a>
             </div>
         </div>
 
@@ -131,18 +127,18 @@
         });
 
         // Handle enter key to move to next field
-        inputs.forEach((input, index) => {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    } else {
-                        form.submit();
-                    }
-                }
-            });
-        });
+        // inputs.forEach((input, index) => {
+        //     input.addEventListener('keypress', (e) => {
+        //         if (e.key === 'Enter') {
+        //             e.preventDefault();
+        //             if (index < inputs.length - 1) {
+        //                 inputs[index + 1].focus();
+        //             } else {
+        //                 form.submit();
+        //             }
+        //         }
+        //     });
+        // });
 
         // Password strength checker
         function checkPasswordStrength(password) {
@@ -172,23 +168,23 @@
         });
 
         // Form submission
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+        // form.addEventListener('submit', (e) => {
+          //  e.preventDefault();
             
-            if (passwordInput.value !== confirmPasswordInput.value) {
-                alert('Passwords do not match!');
-                return;
-            }
+            // if (passwordInput.value !== confirmPasswordInput.value) {
+            //     alert('Passwords do not match!');
+            //     return;
+            // }
 
             // Add ripple effect to button
-            const submitBtn = form.querySelector('.submit-btn');
-            submitBtn.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                submitBtn.style.transform = 'scale(1)';
-            }, 100);
+            // const submitBtn = form.querySelector('.submit-btn');
+            // submitBtn.style.transform = 'scale(0.95)';
+            // setTimeout(() => {
+            //     submitBtn.style.transform = 'scale(1)';
+            // }, 100);
 
             // Add your form submission logic here
-        });
+        // });
 
         // Add hover effect to form groups
         document.querySelectorAll('.form-group').forEach(group => {
