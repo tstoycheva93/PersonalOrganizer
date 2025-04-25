@@ -54,12 +54,11 @@
                 <h3>Tasks for <span class="selected-date">Today</span></h3>
             </div>
             <div class="task-list">
-                <div th:each="category : ${categoryCombinedWithTasks}" class="task-item category"
-                     th:style="'background-color:' + ${category.color}">
-                    <div class="category-indicator"></div>
+                <div th:each="category : ${categoryCombinedWithTasks}" class="task-item category" th:style="'--category-color: ' + ${category.color}">
+                    <div class="category-indicator" th:style="'background-color:' + ${category.color}"></div>
                     <div th:text="${category.date}" class="task-time">${task.time}</div>
                     <div th:text="${category.titleTask}" class="task-title">${task.title}</div>
-                    <div th:class="'task-status status-' + ${#strings.toLowerCase(category.priority.name())}"></div>
+                    <div th:class="'task-status-' + ${#strings.toLowerCase(category.priority.name())}"></div>
                 </div>
             </div>
         </div>

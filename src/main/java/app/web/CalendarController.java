@@ -31,13 +31,16 @@ public class CalendarController {
 
     @GetMapping
     public ModelAndView getHomePage(@AuthenticationPrincipal AuthUser authUser,
-                                    @RequestParam("date") String date) {
-        ModelAndView model=new ModelAndView();
+                                    @RequestParam(value = "date", required = false) String date) {
+        ModelAndView model = new ModelAndView();
         User user = userService.getById(authUser.getUserId());
         model.setViewName("client/calendar");
         model.addObject("user", user);
         List<String> dates = notificationService.getDatesPrettyPrinting(user.getNotifications());
         model.addObject("dates", dates);
+        if (date == null) {
+            date = LocalDate.now().toString();
+        }
         List<CategoryCombinedWithTask> categoryCombinedWithTasks = categoryService.makeCombinedObject(user.getCategories(), LocalDate.parse(date));
         model.addObject("categoryCombinedWithTasks", categoryCombinedWithTasks);
         return model;

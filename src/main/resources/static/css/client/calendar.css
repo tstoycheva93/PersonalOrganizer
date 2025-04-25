@@ -310,12 +310,13 @@ body {
 }
 
 .task-item.category {
-    background-color: #00B4D8;
-}
-
-.task-item.category-work {
     background: var(--hover-light);
 }
+
+.task-item.category::before {
+    background-color: var(--category-color);
+}
+
 
 .task-item.category-work::before {
     background: var(--category-work);
@@ -378,7 +379,7 @@ body {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: yellow;
+    background-color: #eecb1d;
 }
 
 
@@ -386,7 +387,7 @@ body {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: green;
+    background-color: #00ff00;
 }
 
 .status-done {
