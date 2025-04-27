@@ -17,6 +17,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -142,5 +143,11 @@ public class TaskService {
 
     public Task getById(UUID id) {
         return taskRepository.findById(id).orElseThrow(()->new RuntimeException("No such task"));
+    }
+    public int getTaskCountByDateAndUser(LocalDate date, User user) {
+        LocalDateTime startDay = date.atStartOfDay();
+        LocalDateTime endDay = date.atTime(23, 59, 59);
+        List<Task> tasks = taskRepository.findAllByUserAndDueDateBetween(user, startDay, endDay);
+        return tasks.size();
     }
 }

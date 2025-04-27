@@ -206,6 +206,7 @@ body {
 }
 
 .calendar-day {
+    text-decoration: none;
     aspect-ratio: 1;
     background: var(--hover-light);
     border-radius: 12px;

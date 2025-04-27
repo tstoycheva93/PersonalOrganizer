@@ -5,6 +5,8 @@ import app.notification.service.NotificationService;
 import app.security.AuthUser;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.utils.CalendarDay;
+import app.utils.CalendarUtils;
 import app.web.dto.CategoryCombinedWithTask;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @Controller
@@ -22,11 +25,13 @@ public class CalendarController {
     private final UserService userService;
     private final NotificationService notificationService;
     private final CategoryService categoryService;
+    private final CalendarUtils calendarUtils;
 
-    public CalendarController(UserService userService, NotificationService notificationService, CategoryService categoryService) {
+    public CalendarController(UserService userService, NotificationService notificationService, CategoryService categoryService, CalendarUtils calendarUtils) {
         this.userService = userService;
         this.notificationService = notificationService;
         this.categoryService = categoryService;
+        this.calendarUtils = calendarUtils;
     }
 
     @GetMapping
@@ -38,11 +43,17 @@ public class CalendarController {
         model.addObject("user", user);
         List<String> dates = notificationService.getDatesPrettyPrinting(user.getNotifications());
         model.addObject("dates", dates);
-        if (date == null) {
+        if (date == null || date.isEmpty()) {
             date = LocalDate.now().toString();
         }
+        List<CalendarDay> calendarDays = calendarUtils.generateCalendarDays(LocalDate.parse(date).getYear(), LocalDate.parse(date).getMonth().getValue(), LocalDate.parse(date),user);
+        model.addObject("calendarDays", calendarDays);
         List<CategoryCombinedWithTask> categoryCombinedWithTasks = categoryService.makeCombinedObject(user.getCategories(), LocalDate.parse(date));
         model.addObject("categoryCombinedWithTasks", categoryCombinedWithTasks);
+        if (LocalDate.now().equals(LocalDate.parse(date))) {
+            date = "Today";
+        }
+        model.addObject("date", date);
         return model;
     }
 }

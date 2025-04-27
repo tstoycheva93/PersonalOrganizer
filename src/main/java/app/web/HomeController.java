@@ -29,11 +29,9 @@ public class HomeController {
         return model;
     }
     @GetMapping("/home")
-    public ModelAndView getHomePage(@AuthenticationPrincipal AuthUser authUser){
+    public ModelAndView getHomePage(){
         ModelAndView model=new ModelAndView();
-        User user = userService.getById(authUser.getUserId());
-        model.setViewName("client/calendar");
-        model.addObject("user", user);
+        model.setViewName("redirect:/calendar");
         return model;
     }
     @GetMapping("/dashboard")
