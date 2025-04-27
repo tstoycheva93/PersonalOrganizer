@@ -25,11 +25,14 @@
                 <span>🔍</span>
                 <input type="text" placeholder="Search tasks...">
             </div>
-            <select class="sort-dropdown">
-                <option value="priority">Sort by Priority</option>
-                <option value="due-date">Sort by Due Date</option>
-                <option value="category">Sort by Category</option>
-            </select>
+            <form th:action="'/tasks'">
+                <select name="sort" class="sort-dropdown" onchange="this.form.submit()">
+                    <option>Sort by</option>
+                    <option value="priority">Sort by Priority</option>
+                    <option value="due-date">Sort by Due Date</option>
+                    <option value="category">Sort by Category</option>
+                </select>
+            </form>
             <div class="view-controls">
                 <button class="view-btn active" data-view="board">
                     <span>📋</span> Board
@@ -43,36 +46,54 @@
         <div class="categories-section">
             <div class="categories-header">
                 <h3>Categories</h3>
-                <button class="view-btn"  data-bs-toggle="modal" data-bs-target="#categoryModal">
+                <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModal">
                     <span>➕</span> New Category
                 </button>
             </div>
             <div class="categories-list">
-                <div class="category-pill work active">Work</div>
-                <div class="category-pill personal">Personal</div>
-                <div class="category-pill shopping">Shopping</div>
-                <div class="category-pill health">Health</div>
+                <a style="text-decoration: none" th:href="@{'/tasks/category/'+ ${category.id}}"
+                   th:each="category : ${listOfCategories}"
+                   th:class="'category-color'"
+                   th:data-id="${category.id}"
+                   th:text="${category.name}"
+                   th:style="'--category-color: '+ ${category.color}">
+                </a>
             </div>
         </div>
 
-        <div class="board-view" >
+        <div class="board-view">
             <div class="board-column">
                 <div class="column-header">
                     <div class="column-title">
                         <span>📋</span> To Do
-                        <span class="task-count">3</span>
+                        <span th:text="${taskCountToDo}" class="task-count"></span>
                     </div>
                 </div>
-                <div class="task-card" data-bs-toggle="modal" data-bs-target="#taskPreviewModal">
+                <div th:each="task:${userTasks}" th:if="${task.getStatus().name()=='NOT_STARTED'}" class="task-card"
+                     data-bs-toggle="modal" data-bs-target="#taskPreviewModal"
+                     th:attr="
+         data-id=${task.id},
+         data-title=${task.title},
+         data-description=${task.description},
+         data-category=${task.category.id},
+     data-due-date=${#temporals.format(task.dueDate, 'yyyy-MM-dd HH:mm')},
+         data-priority=${task.priority},
+         data-status=${task.status},
+         data-is-recurring=${task.recurring},
+         data-recurring-type=${task.recurringTask}
+     ">
                     <div class="task-header">
-                        <div class="task-title">Design new landing page</div>
-                        <span class="task-category category-work">Work</span>
+                        <div class="task-title" th:text="${task.getTitle()}"></div>
+                        <span th:text="${task.getCategory().getName()}"
+                              th:style="'--category-color: '+ ${task.getCategory().color}" class="task-category"></span>
                     </div>
                     <div class="task-meta">
-                        <div class="task-due">
-                            <span>📅</span> Today
+                        <div th:text=" '📅'+ ${#temporals.format(task.getDueDate(),'MM/dd/yyyy HH:mm') } "
+                             class="task-due">
+                            <span></span>
                         </div>
-                        <span class="priority-high">⚡ High</span>
+                        <span th:text=" '⚡'+ ${task.getPriority()}"
+                              th:class=" 'priority-'+ ${#strings.toLowerCase(task.getPriority().name())}"></span>
                     </div>
                 </div>
 
@@ -82,19 +103,34 @@
                 <div class="column-header">
                     <div class="column-title">
                         <span>🔄</span> In Progress
-                        <span class="task-count">2</span>
+                        <span th:text="${taskCountProgress}" class="task-count"></span>
                     </div>
                 </div>
-                <div class="task-card">
+                <div th:each="task:${userTasks}" th:if="${task.getStatus().name()=='IN_PROGRESS'}" class="task-card"
+                     data-bs-toggle="modal" data-bs-target="#taskPreviewModal"
+                     th:attr="
+         data-id=${task.id},
+         data-title=${task.title},
+         data-description=${task.description},
+         data-category=${task.category.id},
+     data-due-date=${#temporals.format(task.dueDate, 'yyyy-MM-dd')},
+         data-priority=${task.priority},
+         data-status=${task.status},
+         data-is-recurring=${task.recurring},
+         data-recurring-type=${task.recurringTask}
+     ">
                     <div class="task-header">
-                        <div class="task-title">Weekly report</div>
-                        <span class="task-category category-work">Work</span>
+                        <div class="task-title" th:text="${task.getTitle()}"></div>
+                        <span th:text="${task.getCategory().getName()}"
+                              th:style="'--category-color: '+ ${task.getCategory().color}" class="task-category"></span>
                     </div>
                     <div class="task-meta">
-                        <div class="task-due">
-                            <span>📅</span> Today
+                        <div th:text=" '📅'+ ${#temporals.format(task.getDueDate(),'MM/dd/yyyy HH:mm') } "
+                             class="task-due">
+                            <span></span>
                         </div>
-                        <span class="priority-medium">⚡ Medium</span>
+                        <span th:text=" '⚡'+ ${task.getPriority()}"
+                              th:class=" 'priority-'+ ${#strings.toLowerCase(task.getPriority().name())}"></span>
                     </div>
                 </div>
             </div>
@@ -103,25 +139,41 @@
                 <div class="column-header">
                     <div class="column-title">
                         <span>✅</span> Completed
-                        <span class="task-count">1</span>
+                        <span th:text="${taskCountComplete}" class="task-count"></span>
                     </div>
                 </div>
-                <div class="task-card">
+                <div th:each="task:${userTasks}" th:if="${task.getStatus().name()=='COMPLETED'}" class="task-card"
+                     data-bs-toggle="modal" data-bs-target="#taskPreviewModal"
+                     th:attr="
+         data-id=${task.id},
+         data-title=${task.title},
+         data-description=${task.description},
+         data-category=${task.category.id},
+     data-due-date=${#temporals.format(task.dueDate, 'yyyy-MM-dd')},
+         data-priority=${task.priority},
+         data-status=${task.status},
+         data-is-recurring=${task.recurring},
+         data-recurring-type=${task.recurringTask}
+     ">
                     <div class="task-header">
-                        <div class="task-title">Morning workout</div>
-                        <span class="task-category category-health">Health</span>
+                        <div class="task-title" th:text="${task.getTitle()}"></div>
+                        <span th:text="${task.getCategory().getName()}"
+                              th:style="'--category-color: '+ ${task.getCategory().color}" class="task-category"></span>
                     </div>
                     <div class="task-meta">
-                        <div class="task-due">
-                            <span>📅</span> Today
+                        <div th:text=" '📅'+ ${#temporals.format(task.getDueDate(),'MM/dd/yyyy HH:mm') } "
+                             class="task-due">
+                            <span></span>
                         </div>
-                        <span class="priority-medium">⚡ Medium</span>
+                        <span th:text=" '⚡'+ ${task.getPriority()}"
+                              th:class=" 'priority-'+ ${#strings.toLowerCase(task.getPriority().name())}"></span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="list-view">
+            <!-- Header -->
             <div class="list-header">
                 <div>Task</div>
                 <div>Category</div>
@@ -129,8 +181,34 @@
                 <div>Priority</div>
                 <div>Status</div>
             </div>
-            <!-- List view tasks will be populated by JavaScript -->
+
+            <!-- Tasks -->
+            <div data-bs-toggle="modal" data-bs-target="#taskPreviewModal" th:each="task : ${userTasks}"
+                 class="list-task"
+                 th:attr="
+         data-id=${task.id},
+         data-title=${task.title},
+         data-description=${task.description},
+         data-category=${task.category.id},
+     data-due-date=${#temporals.format(task.dueDate, 'yyyy-MM-dd')},
+         data-priority=${task.priority},
+         data-status=${task.status},
+         data-is-recurring=${task.recurring},
+         data-recurring-type=${task.recurringTask}
+     ">
+
+                <div th:text="${task.getTitle()}">Task name</div>
+                <div th:class="'category-color-list'" th:style="'--category-color: '+ ${task.getCategory().color}"
+                     th:text=" ${task.category.name}">Category name
+                </div>
+                <div th:text="${#temporals.format(task.dueDate, 'yyyy-MM-dd')}">Due Date</div>
+                <div th:class=" 'priority-list-'+ ${#strings.toLowerCase(task.getPriority().name())}"
+                     th:text="${task.priority}">Priority
+                </div>
+                <div th:text="${task.status}">Status</div>
+            </div>
         </div>
+
     </div>
 </div>
 
@@ -148,62 +226,83 @@
                 <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/tasks/save}" th:method="POST">
+                <form th:action="@{/tasks}" th:method="POST" th:object="${taskRequest}">
                     <div class="form-group form-full-width">
                         <label for="taskTitle">Title</label>
-                        <input type="text" id="taskTitle"  class="form-control" placeholder="Enter task title" required>
+                        <input th:field="*{title}" type="text" id="taskTitle" class="form-control"
+                               placeholder="Enter task title" required>
                     </div>
                     <div class="form-group form-full-width">
                         <label for="taskDescription">Description</label>
-                        <textarea id="taskDescription" class="form-control" placeholder="Enter task description"></textarea>
+                        <textarea th:field="*{description}" id="taskDescription" class="form-control"
+                                  placeholder="Enter task description"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="taskCategory">Category</label>
-                        <select id="taskCategory"  class="form-control" required>
+                        <select  id="taskCategory" class="form-control" th:field="*{categoryId}" required>
                             <option value="">Select category</option>
-                            <option value="1">Work</option>
-                            <option value="2">Personal</option>
-                            <option value="3">Shopping</option>
-                            <option value="4">Health</option>
+                            <!-- Iterate over the category list -->
+                            <option th:each="category : ${listOfCategories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"> <!-- Set value as id and display name -->
+                            </option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="taskDueDate">Due Date</label>
-                        <input type="date" id="taskDueDate"  class="form-control" required>
+
+                    <div class="form-group ">
+                            <label for="taskDueDate">Due Date</label>
+                            <input th:field="*{dueDate}" type="datetime-local" id="taskDueDate" name="dueDate"
+                                   class="form-control" required>
                     </div>
+
                     <div class="form-group">
                         <label>Priority</label>
                         <div class="toggle-group" id="priorityToggle">
-                            <button type="button" class="toggle-btn" data-value="low">Low</button>
-                            <button type="button" class="toggle-btn active" data-value="medium">Medium</button>
-                            <button type="button" class="toggle-btn" data-value="high">High</button>
+                            <!-- Iterate over priorities and create a button for each -->
+                            <div th:each="priority : ${priorities}">
+                                <button type="button" class="toggle-btn"
+                                        th:data-value="${priority}" th:text="${priority.name()}">
+                                </button>
+                            </div>
                         </div>
+                        <input type="hidden" th:field="*{priority}" id="selectedPriority">
                     </div>
+
+
                     <div class="form-group">
                         <label>Status</label>
                         <div class="toggle-group" id="statusToggle">
-                            <button type="button" class="toggle-btn active" data-value="todo">To Do</button>
-                            <button type="button" class="toggle-btn" data-value="in_progress">In Progress</button>
-                            <button type="button" class="toggle-btn" data-value="completed">Completed</button>
+                            <div th:each="status : ${status}">
+                                <button type="button" class="toggle-btn"
+                                        th:data-value="${status}" th:text="${status.name()}">
+                                </button>
+                            </div>
                         </div>
+                        <input type="hidden" th:field="*{status}" id="selectedStatus">
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate"> Start date</label>
+                        <input th:field="*{startDate}" type="date" id="startDate" class="form-control">
                     </div>
                     <div class="form-group form-full-width">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="isRecurring" > This is a recurring task
+                            <input type="checkbox" id="isRecurring"> This is a recurring task
                         </label>
                         <div class="recurring-options" id="recurringOptions">
                             <div class="form-group">
                                 <label for="recurringType">Recurring Type</label>
-                                <select id="recurringType"  class="form-control">
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="yearly">Yearly</option>
+                                <select th:field="*{recurringTaskType}" id="recurringType" class="form-control">
+                                    <option value="">Select a type</option> <!-- optional default -->
+                                    <option th:each="type : ${T(app.recurring_task.model.RecurringTaskType).values()}"
+                                            th:value="${type}"
+                                            th:text="${type.name().toLowerCase()}">
+                                    </option>
                                 </select>
                             </div>
+
                             <div class="form-group">
                                 <label for="endDate">End Occurrence</label>
-                                <input type="date" id="endDate"  class="form-control">
+                                <input th:field="*{endOccurrence}" type="date" id="endDate" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -225,27 +324,31 @@
                 <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/categories/save}" th:method="POST" th:object="${categoryRequest}">
+                <form th:action="@{/tasks/category}" th:method="POST" th:object="${categoryRequest}">
                     <div class="form-group">
                         <label for="categoryName">Category Name</label>
-                        <input type="text" id="categoryName"  class="form-control" placeholder="Enter category name">
+                        <input th:field="*{categoryName}" type="text" id="categoryName" class="form-control"
+                               placeholder="Enter category name">
                     </div>
                     <div class="form-group">
                         <label>Choose Color</label>
                         <div class="color-picker">
-                            <div class="color-option" style="background: #4361EE" data-color="#4361EE"></div>
-                            <div class="color-option" style="background: #FF6B6B" data-color="#FF6B6B"></div>
-                            <div class="color-option" style="background: #FFB86C" data-color="#FFB86C"></div>
-                            <div class="color-option" style="background: #2ECC71" data-color="#2ECC71"></div>
-                            <div class="color-option" style="background: #9B59B6" data-color="#9B59B6"></div>
-                            <div class="color-option" style="background: #3498DB" data-color="#3498DB"></div>
-                            <div class="color-option" style="background: #E74C3C" data-color="#E74C3C"></div>
-                            <div class="color-option" style="background: #1ABC9C" data-color="#1ABC9C"></div>
+                            <label class="color-option" style="background: #4361EE">
+                                <input type="radio" th:field="*{categoryColor}" value="#4361EE">
+                            </label>
+                            <label class="color-option" style="background: #FF6B6B">
+                                <input type="radio" th:field="*{categoryColor}" value="#FF6B6B">
+                            </label>
+                            <label class="color-option" style="background: #FFB86C">
+                                <input type="radio" th:field="*{categoryColor}" value="#FFB86C">
+                            </label>
+                            <label class="color-option" style="background: #2ECC71">
+                                <input type="radio" th:field="*{categoryColor}" value="#2ECC71">
+                            </label>
                         </div>
-                        <input type="hidden" id="selectedColor" >
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" >Create Category</button>
+                        <button type="submit" class="btn btn-primary">Create Category</button>
                     </div>
                 </form>
             </div>
@@ -262,53 +365,64 @@
                 <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/tasks/save}" th:method="POST" >
+                <form th:action="@{/tasks/save}" th:method="PUT" th:object="${taskRequest}">
+
+                    <input type="hidden" th:field="*{id}"  id="previewTaskId"/>
                     <div class="form-group form-full-width">
                         <label for="previewTaskTitle">Title</label>
-                        <input type="text" id="previewTaskTitle"  class="form-control">
+                        <input th:field="*{title} "name="title" type="text" id="previewTaskTitle" class="form-control">
                     </div>
                     <div class="form-group form-full-width">
                         <label for="previewTaskDescription">Description</label>
-                        <textarea id="previewTaskDescription"  class="form-control"></textarea>
+                        <textarea th:field="*{description}" name="description" id="previewTaskDescription" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="previewTaskCategory">Category</label>
-                        <select id="previewTaskCategory"  class="form-control">
-                            <option value="">Select category</option>
-                            <option value="1">Work</option>
-                            <option value="2">Personal</option>
-                            <option value="3">Shopping</option>
-                            <option value="4">Health</option>
+                        <select th:field="*{categoryId}" name="categoryId" id="previewTaskCategory" class="form-control">
+                            <option th:each="category : ${listOfCategories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"> <!-- Set value as id and display name -->
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="previewTaskDueDate">Due Date</label>
-                        <input type="date" id="previewTaskDueDate" class="form-control">
+                        <input  th:field="*{dueDate}" name="dueDate" type="datetime-local" id="previewTaskDueDate" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Priority</label>
                         <div class="toggle-group" id="previewPriorityToggle">
-                            <button type="button" class="toggle-btn" data-value="low">Low</button>
-                            <button type="button" class="toggle-btn" data-value="medium">Medium</button>
-                            <button type="button" class="toggle-btn" data-value="high">High</button>
+                            <div th:each="priority : ${priorities}">
+                                <button type="button" class="toggle-btn"
+                                        th:data-value="${priority}"
+                                        th:data-name="${priority.name()}"
+                                        th:text="${priority.name()}">
+                                </button>
+                            </div>
                         </div>
+                        <input th:field="*{priority}" type="hidden" id="previewPriorityInput" name="priority">
                     </div>
                     <div class="form-group">
                         <label>Status</label>
                         <div class="toggle-group" id="previewStatusToggle">
-                            <button type="button" class="toggle-btn" data-value="todo">To Do</button>
-                            <button type="button" class="toggle-btn" data-value="in_progress">In Progress</button>
-                            <button type="button" class="toggle-btn" data-value="completed">Completed</button>
+                            <div th:each="status : ${status}">
+                                <button type="button" class="toggle-btn"
+                                        th:data-value="${status}"
+                                        th:data-name="${status.name()}"
+                                        th:text="${status.name()}">
+                                </button>
+                            </div>
                         </div>
+                        <input type="hidden" th:field="*{status}" id="previewStatusInput" name="status">
                     </div>
                     <div class="form-group form-full-width">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="previewIsRecurring" > This is a recurring task
+                            <input  name="isRecurring" type="checkbox" id="previewIsRecurring"> This is a recurring task
                         </label>
                         <div class="recurring-options" id="previewRecurringOptions">
                             <div class="form-group">
                                 <label for="previewRecurringType">Recurring Type</label>
-                                <select id="previewRecurringType" class="form-control">
+                                <select name="recurringType" id="previewRecurringType" class="form-control">
                                     <option value="daily">Daily</option>
                                     <option value="weekly">Weekly</option>
                                     <option value="monthly">Monthly</option>
@@ -317,7 +431,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="previewEndDate">End Occurrence</label>
-                                <input type="date" id="previewEndDate"  class="form-control">
+                                <input type="date" id="previewEndDate" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -330,8 +444,125 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('taskPreviewModal');
 
+        modal.addEventListener('show.bs.modal', function (event) {
+            const taskCard = event.relatedTarget; // <-- your clicked .task-card
+
+            // Get data from the clicked task card
+
+            const title = taskCard.getAttribute('data-title') || '';
+            const description = taskCard.getAttribute('data-description') || '';
+            const category = taskCard.getAttribute('data-category') || '';
+            const dueDate = taskCard.getAttribute('data-due-date') || '';
+            const priority = taskCard.getAttribute('data-priority') || '';
+            const status = taskCard.getAttribute('data-status') || '';
+            const isRecurring = taskCard.getAttribute('data-is-recurring') === 'true';
+            const recurringType = taskCard.getAttribute('data-recurring-type') || '';
+            const endDate = taskCard.getAttribute('data-end-date') || '';
+
+            // Fill input fields
+            document.getElementById('previewTaskId').value = taskCard.getAttribute('data-id');
+            document.getElementById('previewTaskTitle').value = title;
+            document.getElementById('previewTaskDescription').value = description;
+            document.getElementById('previewTaskCategory').value = category;
+            // Set hidden priority input
+            const selectedPriorityButton = document.querySelector('#previewPriorityToggle .toggle-btn.active');
+            if (selectedPriorityButton) {
+                document.getElementById('previewPriorityInput').value = selectedPriorityButton.getAttribute('data-value');
+            }
+
+            // Set hidden status input
+            const selectedStatusButton = document.querySelector('#previewStatusToggle .toggle-btn.active');
+            if (selectedStatusButton) {
+                document.getElementById('previewStatusInput').value = selectedStatusButton.getAttribute('data-value');
+            }
+
+            if (dueDate) {
+                document.getElementById('previewTaskDueDate').value = dueDate;
+            } else {
+                document.getElementById('previewTaskDueDate').value = '';
+            }
+
+            // Fill recurring
+            document.getElementById('previewIsRecurring').checked = isRecurring;
+            const recurringOptions = document.getElementById('previewRecurringOptions');
+            if (isRecurring) {
+                recurringOptions.style.display = 'block';
+                document.getElementById('previewRecurringType').value = recurringType;
+                document.getElementById('previewEndDate').value = endDate;
+            } else {
+                recurringOptions.style.display = 'none';
+            }
+
+            // Activate correct PRIORITY button
+            const priorityButtons = document.querySelectorAll('#previewPriorityToggle .toggle-btn');
+            priorityButtons.forEach(btn => {
+                if (btn.getAttribute('data-name') === priority) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Activate correct STATUS button
+            const statusButtons = document.querySelectorAll('#previewStatusToggle .toggle-btn');
+            statusButtons.forEach(btn => {
+                if (btn.getAttribute('data-name') === status) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+
+        });
+
+        // Toggle recurring options
+        document.getElementById('previewIsRecurring').addEventListener('change', function () {
+            const recurringOptions = document.getElementById('previewRecurringOptions');
+            recurringOptions.style.display = this.checked ? 'block' : 'none';
+        });
+    });
+
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function setupToggleGroup(groupId, inputId) {
+            const toggleButtons = document.querySelectorAll(`#${groupId} .toggle-btn`);
+            const hiddenInput = document.getElementById(inputId);
+
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove 'active' class from all buttons in this group
+                    toggleButtons.forEach(btn => btn.classList.remove('active'));
+
+                    // Add 'active' class to the clicked button
+                    this.classList.add('active');
+
+                    // Update hidden input value
+                    hiddenInput.value = this.getAttribute('data-value');
+                });
+            });
+
+            // Set initial value from the active button if present
+            const activeButton = document.querySelector(`#${groupId} .toggle-btn.active`);
+            if (activeButton) {
+                hiddenInput.value = activeButton.getAttribute('data-value');
+            }
+        }
+
+        // Call function for each toggle group
+        setupToggleGroup('priorityToggle', 'selectedPriority');
+        setupToggleGroup('statusToggle', 'selectedStatus');
+    });
+</script>
+
+
 <script>
 
 

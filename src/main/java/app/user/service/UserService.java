@@ -64,4 +64,8 @@ public class UserService implements UserDetailsService {
         user.setSubscription(subscription);
         userRepository.save(user);
     }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
 }

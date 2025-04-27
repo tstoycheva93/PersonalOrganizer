@@ -220,27 +220,10 @@ body {
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
     font-weight: 500;
+    background-color: var(--category-color);
+    color:white;
 }
 
-.category-work {
-    background: rgba(67, 97, 238, 0.1);
-    color: var(--category-work);
-}
-
-.category-personal {
-    background: rgba(255, 107, 107, 0.1);
-    color: var(--category-personal);
-}
-
-.category-shopping {
-    background: rgba(255, 184, 108, 0.1);
-    color: var(--category-shopping);
-}
-
-.category-health {
-    background: rgba(46, 204, 113, 0.1);
-    color: var(--category-health);
-}
 
 .task-meta {
     display: flex;
@@ -268,13 +251,40 @@ body {
 .priority-low {
     color: var(--success-color);
 }
+.priority-list-high,
+.priority-list-low,
+.priority-list-medium{
+    border-radius: 25px;
+    color: white;
+    padding:0.5rem ;
+    max-width: 7rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: wrap;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+.priority-list-high{
+    background-color: var(--danger-color);
 
+}
+
+.priority-list-medium {
+    background-color: var(--warning-color);
+
+}
+
+.priority-list-low {
+    background-color: var(--success-color);
+}
 /* List View */
 .list-view {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 180, 216, 0.1);
     display: none;
+    margin-bottom: 5rem;
 }
 
 .list-header {
@@ -293,6 +303,7 @@ body {
     align-items: center;
     border-bottom: 1px solid var(--gray-light);
     transition: background-color 0.3s ease;
+
 }
 
 .list-task:hover {
@@ -397,6 +408,7 @@ body {
 }
 
 .toggle-btn {
+    width:17rem;
     flex: 1;
     padding: 0.8rem;
     border: none;
@@ -414,33 +426,33 @@ body {
 }
 
 /* Priority toggle colors */
-.toggle-btn[data-value="low"].active {
-    background: var(--success-color);
+.toggle-btn[data-value="LOW"].active {
+    background: var(--success-color); /* Green for low priority */
     color: white;
 }
 
-.toggle-btn[data-value="medium"].active {
-    background: var(--warning-color);
+.toggle-btn[data-value="MEDIUM"].active {
+    background: var(--warning-color); /* Yellow for medium priority */
     color: white;
 }
 
-.toggle-btn[data-value="high"].active {
-    background: var(--danger-color);
+.toggle-btn[data-value="HIGH"].active {
+    background: var(--danger-color); /* Red for high priority */
     color: white;
 }
 
 /* Status toggle colors */
-.toggle-btn[data-value="todo"].active {
+.toggle-btn[data-value="NOT_STARTED"].active {
     background: var(--primary-color);
     color: white;
 }
 
-.toggle-btn[data-value="in_progress"].active {
+.toggle-btn[data-value="IN_PROGRESS"].active {
     background: var(--warning-color);
     color: white;
 }
 
-.toggle-btn[data-value="completed"].active {
+.toggle-btn[data-value="COMPLETED"].active {
     background: var(--success-color);
     color: white;
 }
@@ -537,6 +549,7 @@ body {
     padding: 0.5rem;
     scrollbar-width: thin;
     scrollbar-color: var(--primary-color) var(--gray-light);
+    text-decoration: none;
 }
 
 .categories-list::-webkit-scrollbar {
@@ -552,61 +565,44 @@ body {
     background: var(--primary-color);
     border-radius: 3px;
 }
-
-.category-pill {
-    padding: 0.4rem 0.8rem;
-    border-radius: 16px;
+.category-color{
+    background-color:var(--category-color) ;
+    border-radius: 25px;
+    color: white;
+    padding:0.4rem 0.8rem;
+    min-width: 4rem;
+    text-align: center;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
     white-space: nowrap;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+.category-color-list{
+    background-color:var(--category-color) ;
+    border-radius: 25px;
+    color: white;
+    padding:0.5rem ;
+    max-width: 7rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: wrap;
+    transition: all 0.3s ease;
     flex-shrink: 0;
 }
 
-.category-pill.work {
-    background: rgba(67, 97, 238, 0.1);
-    color: var(--category-work);
-}
 
-.category-pill.personal {
-    background: rgba(255, 107, 107, 0.1);
-    color: var(--category-personal);
-}
-
-.category-pill.shopping {
-    background: rgba(255, 184, 108, 0.1);
-    color: var(--category-shopping);
-}
-
-.category-pill.health {
-    background: rgba(46, 204, 113, 0.1);
-    color: var(--category-health);
-}
-
-.category-pill:hover {
+.category-color:hover {
     transform: translateY(-2px);
 }
 
-.category-pill.active {
+.category-color.active {
     color: white;
 }
 
-.category-pill.work.active {
-    background: var(--category-work);
-}
 
-.category-pill.personal.active {
-    background: var(--category-personal);
-}
-
-.category-pill.shopping.active {
-    background: var(--category-shopping);
-}
-
-.category-pill.health.active {
-    background: var(--category-health);
-}
 
 /* Modal styles */
 /* .modal {
@@ -747,6 +743,7 @@ padding: 1.75rem;
     border-top: 1px solid var(--gray-medium);
 }
 
+/* Flex container for the color options */
 .color-picker {
     display: flex;
     flex-wrap: wrap;
@@ -754,6 +751,7 @@ padding: 1.75rem;
     margin-top: 1rem;
 }
 
+/* Style for each color circle */
 .color-option {
     width: 36px;
     height: 36px;
@@ -761,17 +759,30 @@ padding: 1.75rem;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid transparent;
+    position: relative; /* Ensure radio button input can be overlaid */
 }
 
+/* Hover effect for color circles */
 .color-option:hover {
     transform: scale(1.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* When a color is selected */
 .color-option.selected {
     border-color: var(--text-color);
     transform: scale(1.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Hide the default radio button circle */
+.color-option input[type="radio"] {
+    opacity: 0; /* Hide the radio button */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
 }
 
 .form-group {
