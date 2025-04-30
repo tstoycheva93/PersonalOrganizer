@@ -118,6 +118,11 @@ body {
     box-shadow: 0 4px 15px rgba(0, 180, 216, 0.2);
     transition: all 0.3s ease;
 }
+.profile-photo img{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
 
 .profile-photo:hover {
     transform: scale(1.05);
@@ -149,6 +154,14 @@ body {
 
 .form-group {
     margin-bottom: 1.5rem;
+}
+.photo-group {
+    display: none;
+    margin-bottom: 1.5rem;
+}
+.photo-group button{
+    font-size: small!important;
+    margin-left: 5px;
 }
 
 .form-group label {

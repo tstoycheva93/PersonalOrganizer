@@ -2,27 +2,23 @@ package app.task.service;
 
 import app.category.model.Category;
 import app.category.service.CategoryService;
-import app.recurring_task.model.RecurringTaskType;
 import app.recurring_task.service.RecurringTaskService;
 import app.task.model.Task;
-import app.task.model.TaskPriority;
 import app.task.model.TaskReminder;
 import app.task.model.TaskStatus;
 import app.task.repository.TaskRepository;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.utils.Deadline;
 import app.web.dto.TaskRequest;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -117,37 +113,79 @@ public class TaskService {
         }
         return tasks;
     }
-@Transactional
-    public void editTask(User user, TaskRequest task,Task existingTask) {
-    if(task.getRecurringTaskType()!=null){
-        recurringTaskService.update(task,existingTask);
-    }
-    Category categoryById = categoryService.getById(task.getCategoryId());
-    existingTask.setTitle(task.getTitle());
-    existingTask.setDescription(task.getDescription());
-    existingTask.setDueDate(task.getDueDate());
-    existingTask.setPriority(task.getPriority());
-    existingTask.setStatus(task.getStatus());
-    if(!task.getCategoryId().equals(existingTask.getCategory().getId())){
-        categoryById.getTasks().add(existingTask);
-        categoryService.save(categoryById);
-        Category oldCategory = existingTask.getCategory();
-        existingTask.setCategory(categoryById);
-        oldCategory.getTasks().remove(existingTask);
-        categoryService.save(oldCategory);
 
-    }
-    taskRepository.save(existingTask);
+    @Transactional
+    public void editTask(User user, TaskRequest task, Task existingTask) {
+        if (task.getRecurringTaskType() != null) {
+            recurringTaskService.update(task, existingTask);
+        }
+        Category categoryById = categoryService.getById(task.getCategoryId());
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setDueDate(task.getDueDate());
+        existingTask.setPriority(task.getPriority());
+        existingTask.setStatus(task.getStatus());
+        if (!task.getCategoryId().equals(existingTask.getCategory().getId())) {
+            categoryById.getTasks().add(existingTask);
+            categoryService.save(categoryById);
+            Category oldCategory = existingTask.getCategory();
+            existingTask.setCategory(categoryById);
+            oldCategory.getTasks().remove(existingTask);
+            categoryService.save(oldCategory);
+
+        }
+        taskRepository.save(existingTask);
 
     }
 
     public Task getById(UUID id) {
-        return taskRepository.findById(id).orElseThrow(()->new RuntimeException("No such task"));
+        return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("No such task"));
     }
+
     public int getTaskCountByDateAndUser(LocalDate date, User user) {
         LocalDateTime startDay = date.atStartOfDay();
         LocalDateTime endDay = date.atTime(23, 59, 59);
         List<Task> tasks = taskRepository.findAllByUserAndDueDateBetween(user, startDay, endDay);
         return tasks.size();
+    }
+
+    public Map<String, Integer> getCountOfTasksByStatus(User user) {
+        Map<String, Integer> countOfTasksByStatus = new HashMap<>();
+        countOfTasksByStatus.put("completed", 0);
+        countOfTasksByStatus.put("inProgress", 0);
+        countOfTasksByStatus.put("notStarted", 0);
+        for (Category category : user.getCategories()) {
+            for (Task task : category.getTasks()) {
+                if (task.getStatus() == TaskStatus.COMPLETED) {
+                    countOfTasksByStatus.put("completed", countOfTasksByStatus.get("completed") + 1);
+                } else if (task.getStatus() == TaskStatus.IN_PROGRESS) {
+                    countOfTasksByStatus.put("inProgress", countOfTasksByStatus.get("inProgress") + 1);
+                } else if (task.getStatus() == TaskStatus.NOT_STARTED) {
+                    countOfTasksByStatus.put("notStarted", countOfTasksByStatus.get("notStarted") + 1);
+                }
+            }
+        }
+        return countOfTasksByStatus;
+    }
+
+    public List<Deadline> getTasksIntoDeadlineObject(User user) {
+        List<Deadline> deadlines = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d HH:mm", Locale.ENGLISH);
+
+        for (Category category : user.getCategories()) {
+            for (Task task : category.getTasks()) {
+                if(task.getDueDate().isAfter(LocalDateTime.now())) {
+                    deadlines.add(Deadline.builder()
+                            .id(task.getId())
+                            .title(task.getTitle())
+                            .category(category.getName())
+                            .dueDate(task.getDueDate().format(formatter))
+                            .priority(task.getPriority().toString())
+                            .status(task.getStatus().toString())
+                            .build());
+                }
+            }
+        }
+        return deadlines;
     }
 }

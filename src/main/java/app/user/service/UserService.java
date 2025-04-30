@@ -9,6 +9,7 @@ import app.subscription.service.SubscriptionService;
 import app.user.model.User;
 import app.user.repository.UserRepository;
 import app.web.dto.RegisterRequest;
+import app.web.dto.UserRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,14 +46,7 @@ public class UserService implements UserDetailsService {
     }
     @Transactional
     public void registerUser(RegisterRequest input) {
-        Optional<User> userWithUsername = userRepository.findByUsername(input.getUsername());
-        if (userWithUsername.isPresent()) {
-            throw new UsernameAlreadyExistException("Username is already in use");
-        }
-        Optional<User> userWithEmail = userRepository.findByEmail(input.getEmail());
-        if (userWithEmail.isPresent()) {
-            throw new EmailAlreadyExistException("Email is already in use");
-        }
+        checkForExistingEmailAndUsername(input.getUsername(), input.getEmail());
         if (!input.getPassword().equals(input.getConfirmPassword())) {
             throw new PasswordDoesNotMatch("The passwords does not match");
         }
@@ -67,5 +61,46 @@ public class UserService implements UserDetailsService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public void editUser(User user, UserRequest userRequest) {
+        user.setName(userRequest.getName());
+        if(!user.getUsername().equals(userRequest.getUsername())) {
+            checkForExistingUsername(userRequest.getUsername());
+            user.setUsername(userRequest.getUsername());
+        }
+        if(!user.getEmail().equals(userRequest.getEmail())) {
+            checkForExistingEmailAndUsername(userRequest.getEmail(), userRequest.getUsername());
+            user.setEmail(userRequest.getEmail());
+        }
+        user.setPhotoPath(userRequest.getPhoto());
+        userRepository.save(user);
+    }
+
+    private void checkForExistingEmailAndUsername(String username, String email) {
+        checkForExistingUsername(username);
+        checkForExistingEmail(email);
+    }
+
+    private void checkForExistingUsername(String username) {
+        Optional<User> userWithUsername = userRepository.findByUsername(username);
+        if (userWithUsername.isPresent()) {
+            throw new UsernameAlreadyExistException("Username is already in use");
+        }
+    }
+
+    private void checkForExistingEmail(String email) {
+        Optional<User> userWithEmail = userRepository.findByEmail(email);
+        if (userWithEmail.isPresent()) {
+            throw new EmailAlreadyExistException("Email is already in use");
+        }
+    }
+
+    public void editPassword(User user, UserRequest userRequest) {
+        if(passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(userRequest.getConfirmPassword()));
+            userRepository.save(user);
+        }
+        throw new PasswordDoesNotMatch("The passwords does not match");
     }
 }

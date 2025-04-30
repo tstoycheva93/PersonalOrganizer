@@ -20,7 +20,7 @@ public class RecurringTask {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "task_id", unique = true, nullable = false)
+    @JoinColumn(name = "task_id", unique = true)
     private Task task;
 
     @Column(nullable = false)
