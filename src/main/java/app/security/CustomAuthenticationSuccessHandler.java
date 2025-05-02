@@ -1,5 +1,7 @@
 package app.security;
 
+import app.settings.SettingsProperties;
+import app.settings.SettingsService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +15,13 @@ import java.util.Collection;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    private final SettingsService settingsService;
+    private final SettingsProperties settings;
+
+    public CustomAuthenticationSuccessHandler(SettingsService settingsService, SettingsProperties settingsProperties) {
+        this.settingsService = settingsService;
+        this.settings = settingsProperties;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -20,10 +29,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException, ServletException {
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
+        if (settings.isMaintenance()) {
+            settingsService.setMaintenance(true);
+            response.sendRedirect("/errors/maintenance");
+            return;
+        }
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
-
             if (role.equals("ROLE_ADMIN")) {
                 response.sendRedirect("/dashboard");
                 return;

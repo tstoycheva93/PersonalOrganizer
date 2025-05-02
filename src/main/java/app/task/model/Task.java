@@ -1,10 +1,8 @@
-// src/main/java/app/task/model/Task.java
 package app.task.model;
 
 import app.category.model.Category;
 import app.recurring_task.model.RecurringTask;
 import app.user.model.User;
-import app.validation.ValidDateRange;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,7 +14,6 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@ValidDateRange
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,6 +1,7 @@
 package app.web;
 
 import app.security.AuthUser;
+import app.settings.SettingsProperties;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
@@ -12,49 +13,61 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
     private final UserService userService;
+    private final SettingsProperties settingsProperties;
 
-    public HomeController(UserService userService) {
+    public HomeController(UserService userService, SettingsProperties settingsProperties) {
         this.userService = userService;
+        this.settingsProperties = settingsProperties;
     }
 
     @GetMapping("/")
-    public ModelAndView getIndexPage(){
-        ModelAndView model=new ModelAndView();
+    public ModelAndView getIndexPage() {
+        ModelAndView model = new ModelAndView();
         model.setViewName("index/index");
         return model;
     }
+
     @GetMapping("/home")
-    public ModelAndView getHomePage(){
-        ModelAndView model=new ModelAndView();
+    public ModelAndView getHomePage() {
+        ModelAndView model = new ModelAndView();
         model.setViewName("redirect:/calendar");
         return model;
     }
+
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
-    public ModelAndView getDashboardPage(){
-        ModelAndView model=new ModelAndView();
+    public ModelAndView getDashboardPage() {
+        ModelAndView model = new ModelAndView();
         model.setViewName("admin/admin");
         return model;
     }
+
     @GetMapping("/login")
-    public ModelAndView getLoginPage(){
-        ModelAndView model=new ModelAndView();
+    public ModelAndView getLoginPage() {
+        ModelAndView model = new ModelAndView();
         model.setViewName("index/login");
         model.addObject("request", new LoginRequest());
         return model;
     }
+
     @GetMapping("/register")
     public ModelAndView getRegisterPage() {
         ModelAndView model = new ModelAndView();
+        if (!settingsProperties.isEnabledRegister()) {
+            model.setViewName("redirect:/errors/register");
+            return model;
+        }
         model.setViewName("index/register");
         model.addObject("request", new RegisterRequest());
         return model;
     }
+
     @PostMapping("/register")
     public ModelAndView registerNewUser(RegisterRequest registerRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -63,4 +76,29 @@ public class HomeController {
         userService.registerUser(registerRequest);
         return new ModelAndView("redirect:/login");
     }
+
+    @GetMapping("/errors/maintenance")
+    public ModelAndView getErrorPage() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("index/error");
+        model.addObject("title", "We'll Be Right Back");
+        model.addObject("message", "Our website is currently undergoing scheduled maintenance.\n" +
+                "We are working hard to improve your experience and will be back online shortly.\n" +
+                "Thank you for your patience and understanding.");
+        model.addObject("type", "loggedOut");
+        return model;
+    }
+
+    @GetMapping("/errors/register")
+    public ModelAndView getRegisterErrorPage() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("index/error");
+        model.addObject("title", "Temporarily Unavailable");
+        model.addObject("message", "Registration is currently disabled due to ongoing maintenance. "
+                + "We’re updating our system to serve you better. "
+                + "Please check back later. Thank you for your patience!");
+        model.addObject("type", "loggedOut");
+        return model;
+    }
+
 }
