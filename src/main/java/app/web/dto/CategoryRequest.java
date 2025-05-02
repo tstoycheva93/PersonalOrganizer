@@ -2,6 +2,8 @@ package app.web.dto;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -10,4 +12,6 @@ import lombok.*;
 public class CategoryRequest {
     private String categoryName;
     private String categoryColor;
+
+
 }

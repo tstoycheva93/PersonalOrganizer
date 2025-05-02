@@ -13,12 +13,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserService userService;
+
 
     public CategoryService(CategoryRepository categoryRepository, UserService userService) {
         this.categoryRepository = categoryRepository;
@@ -66,4 +68,6 @@ public class CategoryService {
     public void save(Category categoryById) {
         categoryRepository.save(categoryById);
     }
+
+
 }

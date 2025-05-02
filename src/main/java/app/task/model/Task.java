@@ -4,6 +4,7 @@ package app.task.model;
 import app.category.model.Category;
 import app.recurring_task.model.RecurringTask;
 import app.user.model.User;
+import app.validation.ValidDateRange;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@ValidDateRange
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -67,6 +69,6 @@ public class Task {
 
     private boolean isDeleted;
 
-    @OneToOne(mappedBy = "task")
+    @OneToOne(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private RecurringTask recurringTask;
 }

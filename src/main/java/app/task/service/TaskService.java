@@ -2,6 +2,7 @@ package app.task.service;
 
 import app.category.model.Category;
 import app.category.service.CategoryService;
+import app.recurring_task.model.RecurringTask;
 import app.recurring_task.model.RecurringTaskType;
 import app.recurring_task.service.RecurringTaskService;
 import app.task.model.Task;
@@ -12,11 +13,13 @@ import app.task.repository.TaskRepository;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.TaskRequest;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -117,37 +120,63 @@ public class TaskService {
         }
         return tasks;
     }
-@Transactional
-    public void editTask(User user, TaskRequest task,Task existingTask) {
-    if(task.getRecurringTaskType()!=null){
-        recurringTaskService.update(task,existingTask);
-    }
-    Category categoryById = categoryService.getById(task.getCategoryId());
-    existingTask.setTitle(task.getTitle());
-    existingTask.setDescription(task.getDescription());
-    existingTask.setDueDate(task.getDueDate());
-    existingTask.setPriority(task.getPriority());
-    existingTask.setStatus(task.getStatus());
-    if(!task.getCategoryId().equals(existingTask.getCategory().getId())){
-        categoryById.getTasks().add(existingTask);
-        categoryService.save(categoryById);
-        Category oldCategory = existingTask.getCategory();
-        existingTask.setCategory(categoryById);
-        oldCategory.getTasks().remove(existingTask);
-        categoryService.save(oldCategory);
 
-    }
-    taskRepository.save(existingTask);
+    @Transactional
+    public void editTask(User user, TaskRequest task, Task existingTask) {
+        if (task.getRecurringTaskType() != null) {
+            recurringTaskService.update(task, existingTask);
+        } else if (existingTask.getRecurringTask() != null) {
+            existingTask.setRecurring(false);
+            existingTask.setRecurringTask(null);
+            taskRepository.save(existingTask);
+
+        }
+
+        Category categoryById = categoryService.getById(task.getCategoryId());
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setDueDate(task.getDueDate());
+        existingTask.setPriority(task.getPriority());
+        existingTask.setStatus(task.getStatus());
+        if (!task.getCategoryId().equals(existingTask.getCategory().getId())) {
+            categoryById.getTasks().add(existingTask);
+            categoryService.save(categoryById);
+            Category oldCategory = existingTask.getCategory();
+            existingTask.setCategory(categoryById);
+            oldCategory.getTasks().remove(existingTask);
+            categoryService.save(oldCategory);
+
+        }
+        taskRepository.save(existingTask);
 
     }
 
     public Task getById(UUID id) {
-        return taskRepository.findById(id).orElseThrow(()->new RuntimeException("No such task"));
+        return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("No such task"));
     }
+
     public int getTaskCountByDateAndUser(LocalDate date, User user) {
         LocalDateTime startDay = date.atStartOfDay();
         LocalDateTime endDay = date.atTime(23, 59, 59);
         List<Task> tasks = taskRepository.findAllByUserAndDueDateBetween(user, startDay, endDay);
         return tasks.size();
     }
+    @Transactional
+    public void deleteTask(User user, UUID id) throws AccessDeniedException {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You don't have permission to delete this task.");
+        }
+        UUID categoryId = task.getCategory().getId();
+        Category category = user.getCategories()
+                .stream()
+                .filter(c -> c.getId().equals(categoryId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Category not found for user"));
+        category.getTasks().remove(task);
+        categoryService.save(category);
+        taskRepository.delete(task);
+    }
+
 }

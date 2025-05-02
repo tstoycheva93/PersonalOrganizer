@@ -29,8 +29,14 @@ public class RecurringTaskService {
 
     public void update(TaskRequest task, Task existingTask) {
         RecurringTask recurringTask = existingTask.getRecurringTask();
+        if(recurringTask==null){
+            save(existingTask.getUser(),task,existingTask);
+            return;
+        }
         recurringTask.setType(task.getRecurringTaskType());
         recurringTask.setEndDate(task.getEndOccurrence().atStartOfDay());
         recurringTaskRepository.save(recurringTask);
     }
+
+
 }

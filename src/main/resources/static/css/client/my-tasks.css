@@ -107,6 +107,7 @@ body {
 }
 
 .sort-dropdown {
+    margin-left: 22rem;
     padding: 0.8rem 1.2rem;
     border: 1px solid rgba(0, 180, 216, 0.2);
     border-radius: 12px;
@@ -521,6 +522,7 @@ body {
 
 /* Categories Section */
 .categories-section {
+    margin-top:2rem;
     margin-bottom: 2rem;
     display: flex;
     flex-direction: column;

@@ -45,7 +45,7 @@ public class User {
     private Subscription subscription;
     @OneToMany
     private List<Notification> notifications;
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Category> categories;
     
     private int subscriptionCount;
