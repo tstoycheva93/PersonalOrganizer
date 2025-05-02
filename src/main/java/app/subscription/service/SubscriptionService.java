@@ -27,4 +27,18 @@ public class SubscriptionService {
                 .build();
         return subscriptionRepository.save(subscription);
     }
+
+    public void createPremiumSubscriptionForUser(User user) {
+        Subscription subscription = user.getSubscription();
+        if (subscription.getType().equals(SubscriptionType.FREE)) {
+            subscription.setPeriod(SubscriptionPeriod.MONTHLY);
+            subscription.setType(SubscriptionType.PREMIUM);
+            subscription.setRenewable(false);
+        } else {
+            subscription.setPeriod(SubscriptionPeriod.YEARLY);
+            subscription.setType(SubscriptionType.FREE);
+            subscription.setRenewable(true);
+        }
+        subscriptionRepository.save(subscription);
+    }
 }

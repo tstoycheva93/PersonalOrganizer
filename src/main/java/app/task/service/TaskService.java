@@ -2,16 +2,14 @@ package app.task.service;
 
 import app.category.model.Category;
 import app.category.service.CategoryService;
-import app.recurring_task.model.RecurringTask;
-import app.recurring_task.model.RecurringTaskType;
 import app.recurring_task.service.RecurringTaskService;
 import app.task.model.Task;
-import app.task.model.TaskPriority;
 import app.task.model.TaskReminder;
 import app.task.model.TaskStatus;
 import app.task.repository.TaskRepository;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.utils.Deadline;
 import app.web.dto.TaskRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -179,4 +175,44 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+
+    public Map<String, Integer> getCountOfTasksByStatus(User user) {
+        Map<String, Integer> countOfTasksByStatus = new HashMap<>();
+        countOfTasksByStatus.put("completed", 0);
+        countOfTasksByStatus.put("inProgress", 0);
+        countOfTasksByStatus.put("notStarted", 0);
+        for (Category category : user.getCategories()) {
+            for (Task task : category.getTasks()) {
+                if (task.getStatus() == TaskStatus.COMPLETED) {
+                    countOfTasksByStatus.put("completed", countOfTasksByStatus.get("completed") + 1);
+                } else if (task.getStatus() == TaskStatus.IN_PROGRESS) {
+                    countOfTasksByStatus.put("inProgress", countOfTasksByStatus.get("inProgress") + 1);
+                } else if (task.getStatus() == TaskStatus.NOT_STARTED) {
+                    countOfTasksByStatus.put("notStarted", countOfTasksByStatus.get("notStarted") + 1);
+                }
+            }
+        }
+        return countOfTasksByStatus;
+    }
+
+    public List<Deadline> getTasksIntoDeadlineObject(User user) {
+        List<Deadline> deadlines = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d HH:mm", Locale.ENGLISH);
+
+        for (Category category : user.getCategories()) {
+            for (Task task : category.getTasks()) {
+                if(task.getDueDate().isAfter(LocalDateTime.now())) {
+                    deadlines.add(Deadline.builder()
+                            .id(task.getId())
+                            .title(task.getTitle())
+                            .category(category.getName())
+                            .dueDate(task.getDueDate().format(formatter))
+                            .priority(task.getPriority().toString())
+                            .status(task.getStatus().toString())
+                            .build());
+                }
+            }
+        }
+        return deadlines;
+    }
 }

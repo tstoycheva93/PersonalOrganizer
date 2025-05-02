@@ -31,7 +31,6 @@
                 <div class="chart-container">
                     <canvas id="completionChart"></canvas>
                 </div>
-                <div class="stats-info">You've completed 15 out of 20 tasks this week</div>
             </div>
 
             <div class="stats-card">
@@ -41,20 +40,11 @@
                 </div>
                 <div class="stats-info">Most of your tasks are work-related</div>
             </div>
-
-            <div class="stats-card">
-                <h3><span>⏳</span> Time Management</h3>
-                <div class="chart-container">
-                    <canvas id="timeChart"></canvas>
-                </div>
-                <div class="stats-info">Peak productivity: Morning hours</div>
-            </div>
         </div>
 
         <div class="upcoming-tasks">
             <h3><span>🎯</span> Upcoming Deadlines</h3>
             <div class="task-timeline" id="taskTimeline">
-                <!-- Timeline items will be populated by JavaScript -->
             </div>
         </div>
         <div style="height: 30px;"></div>
@@ -62,77 +52,9 @@
 
 </div>
 
-<script>
+<script th:inline="javascript">
     // Sample data
-    const taskData = {
-        completion: {
-            completed: 15,
-            inProgress: 3,
-            notStarted: 2
-        },
-        categories: {
-            work: 8,
-            personal: 4,
-            study: 3,
-            health: 3,
-            shopping: 2
-        },
-        timeDistribution: {
-            morning: 40,
-            afternoon: 35,
-            evening: 25
-        },
-        upcomingDeadlines: [
-            {
-                id: 1,
-                title: "Project Presentation",
-                category: "work",
-                dueDate: "2024-03-15",
-                priority: "high",
-                status: "in_progress"
-            },
-            {
-                id: 2,
-                title: "Grocery Shopping",
-                category: "shopping",
-                dueDate: "2024-03-16",
-                priority: "medium",
-                status: "not_started"
-            },
-            {
-                id: 3,
-                title: "Dentist Appointment",
-                category: "health",
-                dueDate: "2024-03-17",
-                priority: "high",
-                status: "not_started"
-            },
-            {
-                id: 4,
-                title: "Study for Exam",
-                category: "study",
-                dueDate: "2024-03-18",
-                priority: "high",
-                status: "in_progress"
-            },
-            {
-                id: 5,
-                title: "Team Meeting",
-                category: "work",
-                dueDate: "2024-03-19",
-                priority: "medium",
-                status: "not_started"
-            },
-            {
-                id: 6,
-                title: "Birthday Party Planning",
-                category: "personal",
-                dueDate: "2024-03-20",
-                priority: "medium",
-                status: "not_started"
-            }
-        ]
-    };
+    let taskData = /*[[${taskData}]]*/ {};
 
     // Motivation messages
     const motivationalMessages = [
@@ -173,6 +95,7 @@
             data: {
                 labels: Object.keys(taskData.categories),
                 datasets: [{
+                    label: "Tasks Completed",
                     data: Object.values(taskData.categories),
                     backgroundColor: [
                         'rgba(67, 97, 238, 0.8)',
@@ -191,25 +114,6 @@
                         beginAtZero: true
                     }
                 }
-            }
-        });
-
-        // Time Management Chart
-        const timeCtx = document.getElementById('timeChart').getContext('2d');
-        new Chart(timeCtx, {
-            type: 'line',
-            data: {
-                labels: Object.keys(taskData.timeDistribution),
-                datasets: [{
-                    data: Object.values(taskData.timeDistribution),
-                    borderColor: 'rgba(0, 180, 216, 0.8)',
-                    fill: true,
-                    backgroundColor: 'rgba(0, 180, 216, 0.1)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
             }
         });
     }
