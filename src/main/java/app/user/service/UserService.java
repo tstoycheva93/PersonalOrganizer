@@ -1,6 +1,7 @@
 package app.user.service;
 
 import app.exception.EmailAlreadyExistException;
+import app.exception.EmailNotFoundException;
 import app.exception.PasswordDoesNotMatch;
 import app.exception.UsernameAlreadyExistException;
 import app.security.AuthUser;
@@ -208,5 +209,13 @@ public class UserService implements UserDetailsService {
 
     public List<User> getRecentActivityForDay(LocalDateTime localDateTime) {
         return userRepository.findAllByCreatedAtBetween(localDateTime, localDateTime.toLocalDate().atTime(23, 59, 59));
+    }
+
+    public User getByEmail(String userSearch) {
+        Optional<User> userWithEmail = userRepository.findByEmail(userSearch);
+        if (userWithEmail.isEmpty()) {
+            throw new EmailNotFoundException("Email not found");
+        }
+        return userWithEmail.get();
     }
 }
