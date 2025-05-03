@@ -17,9 +17,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import app.utils.DateUtils;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -44,6 +51,7 @@ public class UserService implements UserDetailsService {
     public User getById(UUID userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Wrong credentials"));
     }
+
     @Transactional
     public void registerUser(RegisterRequest input) {
         checkForExistingEmailAndUsername(input.getUsername(), input.getEmail());
@@ -65,11 +73,11 @@ public class UserService implements UserDetailsService {
 
     public void editUser(User user, UserRequest userRequest) {
         user.setName(userRequest.getName());
-        if(!user.getUsername().equals(userRequest.getUsername())) {
+        if (!user.getUsername().equals(userRequest.getUsername())) {
             checkForExistingUsername(userRequest.getUsername());
             user.setUsername(userRequest.getUsername());
         }
-        if(!user.getEmail().equals(userRequest.getEmail())) {
+        if (!user.getEmail().equals(userRequest.getEmail())) {
             checkForExistingEmailAndUsername(userRequest.getEmail(), userRequest.getUsername());
             user.setEmail(userRequest.getEmail());
         }
@@ -97,10 +105,108 @@ public class UserService implements UserDetailsService {
     }
 
     public void editPassword(User user, UserRequest userRequest) {
-        if(passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(userRequest.getConfirmPassword()));
             userRepository.save(user);
         }
         throw new PasswordDoesNotMatch("The passwords does not match");
+    }
+
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    public int getActiveUsers() {
+        return getAll().stream()
+                .filter(User::isActive)
+                .toList()
+                .size();
+    }
+
+    public Map<String, Integer> getChartInfoForUsers(String growth) {
+        switch (growth) {
+            case "week" -> {
+                return getChartInfoForOneWeek();
+            }
+            case "month" -> {
+                YearMonth month = YearMonth.of(LocalDate.now().getYear(), LocalDate.now().getMonth());
+                List<DateUtils> weeks = getWeeksByISO(month);
+                return getStringIntegerMap(weeks);
+            }
+            case "year" -> {
+                List<DateUtils> dateUtils = getForMonth();
+                return getStringIntegerMap(dateUtils);
+            }
+        }
+        return getChartInfoForOneWeek();
+    }
+
+    private Map<String, Integer> getChartInfoForOneWeek() {
+        Map<String, Integer> chartInfo = new LinkedHashMap<>();
+        int days = 0;
+        while (days < 7) {
+            LocalDate today = LocalDate.now();
+            today = today.minusDays(days);
+            List<User> orders = getUsersByDay(today.atStartOfDay(), today.atTime(23, 59, 59));
+            chartInfo.put(today.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH), orders.size());
+            days++;
+        }
+        return chartInfo;
+    }
+
+    private List<User> getUsersByDay(LocalDateTime start, LocalDateTime end) {
+        return userRepository.findAllByCreatedAtBetween(start, end);
+    }
+
+    private List<DateUtils> getWeeksByISO(YearMonth month) {
+        List<DateUtils> dateUtils = new ArrayList<>();
+        LocalDate start = month.atDay(1);
+        LocalDate end = month.atEndOfMonth();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d").localizedBy(Locale.ENGLISH);
+        while (!start.isAfter(end)) {
+            LocalDate weekEnd = start.with(DayOfWeek.SUNDAY);
+            if (weekEnd.isAfter(end)) weekEnd = end;
+            String label;
+            if (start.getDayOfMonth() == 1) {
+                label = "Begin: - " + weekEnd.format(formatter);
+            } else if (weekEnd.equals(end)) {
+                label = start.format(formatter) + " - End";
+            } else {
+                label = start.format(formatter) + " - " + weekEnd.format(formatter);
+            }
+            LocalDateTime startDateTime = start.atStartOfDay();
+            LocalDateTime endDateTime = weekEnd.atTime(23, 59, 59);
+            dateUtils.add(new DateUtils(label, startDateTime, endDateTime));
+            start = weekEnd.plusDays(1);
+        }
+
+        return dateUtils;
+    }
+
+    private Map<String, Integer> getStringIntegerMap(List<DateUtils> dateUtils) {
+        Map<String, Integer> chartInfo = new LinkedHashMap<>();
+        for (DateUtils month : dateUtils) {
+            List<User> orders = getUsersByDay(month.getStartDateTime(), month.getEndDateTime());
+            chartInfo.put(month.getLabel(), orders.size());
+        }
+        return chartInfo;
+    }
+
+    private List<DateUtils> getForMonth() {
+        List<DateUtils> dateUtils = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {
+            LocalDate firstDay = LocalDate.of(LocalDate.now().getYear(), month, 1);
+            LocalDate lastDay = firstDay.withDayOfMonth(firstDay.lengthOfMonth());
+            dateUtils.add(new DateUtils(
+                    firstDay.getMonth().name(),
+                    firstDay.atStartOfDay(),
+                    lastDay.atTime(23, 59, 59)
+            ));
+        }
+        return dateUtils;
+    }
+
+    public List<User> getRecentActivityForDay(LocalDateTime localDateTime) {
+        return userRepository.findAllByCreatedAtBetween(localDateTime, localDateTime.toLocalDate().atTime(23, 59, 59));
     }
 }

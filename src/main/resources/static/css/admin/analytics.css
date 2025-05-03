@@ -124,6 +124,7 @@ body {
 }
 
 .time-filter-btn {
+    text-decoration: none;
     padding: 0.5rem 1rem;
     border: 1px solid rgba(0, 180, 216, 0.2);
     border-radius: 8px;
@@ -161,6 +162,7 @@ th {
 }
 
 .export-btn {
+    text-decoration: none;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 8px;

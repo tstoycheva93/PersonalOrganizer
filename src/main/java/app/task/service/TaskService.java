@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -157,6 +158,7 @@ public class TaskService {
         List<Task> tasks = taskRepository.findAllByUserAndDueDateBetween(user, startDay, endDay);
         return tasks.size();
     }
+
     @Transactional
     public void deleteTask(User user, UUID id) throws AccessDeniedException {
         Task task = taskRepository.findById(id)
@@ -201,7 +203,7 @@ public class TaskService {
 
         for (Category category : user.getCategories()) {
             for (Task task : category.getTasks()) {
-                if(task.getDueDate().isAfter(LocalDateTime.now())) {
+                if (task.getDueDate().isAfter(LocalDateTime.now())) {
                     deadlines.add(Deadline.builder()
                             .id(task.getId())
                             .title(task.getTitle())
@@ -214,5 +216,39 @@ public class TaskService {
             }
         }
         return deadlines;
+    }
+
+    public int getAllCreatedTasks() {
+        return taskRepository.countAllByStatus(TaskStatus.NOT_STARTED);
+    }
+
+    public List<Integer> getAllCreatedTasksByDay() {
+        List<Integer> createdTasks = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate thisWeekMonday = today.with(DayOfWeek.MONDAY);
+        LocalDate lastWeekStart = thisWeekMonday.minusWeeks(1);
+        for (int i = 0; i < 7; i++) {
+            int count = taskRepository.countAllByCreatedAtBetween(lastWeekStart.atStartOfDay(), lastWeekStart.atTime(23, 59, 59));
+            createdTasks.add(count);
+            lastWeekStart = lastWeekStart.plusDays(1);
+        }
+        return createdTasks;
+    }
+
+    public List<Integer> getAllCompletedTasksByDay() {
+        List<Integer> completedTasks = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate thisWeekMonday = today.with(DayOfWeek.MONDAY);
+        LocalDate lastWeekStart = thisWeekMonday.minusWeeks(1);
+        for (int i = 0; i < 7; i++) {
+            int count = taskRepository.countAllByStatusAndUpdatedAtBetween(TaskStatus.COMPLETED, lastWeekStart.atStartOfDay(), lastWeekStart.atTime(23, 59, 59));
+            completedTasks.add(count);
+            lastWeekStart = lastWeekStart.plusDays(1);
+        }
+        return completedTasks;
+    }
+
+    public List<Task> getRecentActivityForDay(LocalDateTime now) {
+        return taskRepository.findAllByUpdatedAtBetween(now, now.toLocalDate().atTime(23, 59, 59));
     }
 }
