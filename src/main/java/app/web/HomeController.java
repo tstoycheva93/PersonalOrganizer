@@ -37,6 +37,7 @@ public class HomeController {
     public ModelAndView getHomePage() {
         ModelAndView model = new ModelAndView();
         model.setViewName("redirect:/calendar");
+        model.addObject("page", "Calendar");
         return model;
     }
 
@@ -45,6 +46,7 @@ public class HomeController {
     public ModelAndView getDashboardPage() {
         ModelAndView model = new ModelAndView();
         model.setViewName("admin/admin");
+        model.addObject("page", "Dashboard");
         return model;
     }
 
@@ -110,6 +112,7 @@ public class HomeController {
         model.setViewName("client/faq");
         User user = userService.getById(authUser.getUserId());
         model.addObject("user", user);
+        model.addObject("page", "FAQ");
         return model;
     }
 

@@ -26,6 +26,7 @@ public class SettingsController {
         model.setViewName("admin/settings");
         model.addObject("enabled", settingsProperties.isMaintenance());
         model.addObject("register", settingsProperties.isEnabledRegister());
+        model.addObject("page", "Settings");
         return model;
     }
 

@@ -53,7 +53,7 @@ public class StatisticsController {
         List<Deadline> upcomingDeadlines = taskService.getTasksIntoDeadlineObject(user);
         taskData.put("upcomingDeadlines", upcomingDeadlines);
         modelAndView.addObject("taskData", taskData);
-
+        modelAndView.addObject("page", "Statistics");
         return modelAndView;
     }
 
@@ -83,6 +83,8 @@ public class StatisticsController {
         modelAndView.addObject("taskCompleted", taskCompleted);
         List<RecentActivity> recentActivityList = recentActivities.getRecentActivities();
         modelAndView.addObject("recentActivity", recentActivityList);
+        modelAndView.addObject("page", "Analytics");
+
         return modelAndView;
     }
 

@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="categories-list">
-                    <a style="text-decoration: none" th:href="@{'/tasks/category/'+ ${category.id}}"
+                    <a th:href="@{'/tasks/category/'+ ${category.id}}"
                        th:each="category : ${listOfCategories}"
                        th:class="'category-color'"
                        th:data-id="${category.id}"

@@ -31,6 +31,7 @@ public class AccountController {
         model.addObject("user", user);
         UserRequest convert = conversionService.convert(user, UserRequest.class);
         model.addObject("request", convert);
+        model.addObject("page", "Account");
         return model;
     }
 
@@ -40,6 +41,7 @@ public class AccountController {
         User user = userService.getById(id);
         userService.editUser(user, userRequest);
         model.setViewName("redirect:/accounts");
+        model.addObject("page", "Account");
         return model;
     }
 
@@ -49,6 +51,7 @@ public class AccountController {
         User user = userService.getById(id);
         userService.editPassword(user, userRequest);
         model.setViewName("redirect:/accounts");
+        model.addObject("page", "Account");
         return model;
     }
 

@@ -24,6 +24,7 @@ public class UserController {
     public ModelAndView getUsersPage() {
         ModelAndView model=new ModelAndView();
         model.setViewName("admin/users");
+        model.addObject("page", "Users");
         return model;
     }
 }

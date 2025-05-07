@@ -58,6 +58,7 @@ public class TaskController {
         model.addObject("taskCountToDo", taskService.getTasksCount(userById, TaskStatus.NOT_STARTED));
         model.addObject("taskCountProgress", taskService.getTasksCount(userById, TaskStatus.IN_PROGRESS));
         model.addObject("taskCountComplete", taskService.getTasksCount(userById, TaskStatus.COMPLETED));
+        model.addObject("page", "Tasks");
         return model;
     }
 

@@ -569,6 +569,7 @@ body {
 }
 .category-color{
     background-color:var(--category-color) ;
+    text-decoration: none !important;
     border-radius: 25px;
     color: white;
     padding:0.4rem 0.8rem;
@@ -583,6 +584,7 @@ body {
 }
 .category-color-list{
     background-color:var(--category-color) ;
+    text-decoration: none !important;
     border-radius: 25px;
     color: white;
     padding:0.5rem ;
