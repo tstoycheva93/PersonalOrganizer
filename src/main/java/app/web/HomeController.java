@@ -1,6 +1,7 @@
 package app.web;
 
 import app.security.AuthUser;
+import app.task.service.TaskService;
 import app.settings.SettingsProperties;
 import app.user.model.User;
 import app.user.service.UserService;
@@ -19,10 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
     private final UserService userService;
+    private final TaskService taskService;
     private final SettingsProperties settingsProperties;
 
-    public HomeController(UserService userService, SettingsProperties settingsProperties) {
+    public HomeController(UserService userService, TaskService taskService,SettingsProperties settingsProperties) {
         this.userService = userService;
+        this.taskService = taskService;
         this.settingsProperties = settingsProperties;
     }
 
@@ -32,22 +35,25 @@ public class HomeController {
         model.setViewName("index/index");
         return model;
     }
-
     @GetMapping("/home")
     public ModelAndView getHomePage() {
         ModelAndView model = new ModelAndView();
         model.setViewName("redirect:/calendar");
         return model;
     }
-
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
     public ModelAndView getDashboardPage() {
         ModelAndView model = new ModelAndView();
         model.setViewName("admin/admin");
+        model.addObject("totalUserCount", userService.countTotalUsers());
+        model.addObject("totalNumberOfTasks", taskService.getAllTasksCount());
+        model.addObject("totalActiveUsers", userService.getActiveUsers());
+        model.addObject("totalPremiumUsers", userService.getPremiumUsers());
+        model.addObject("topUsers", userService.topUsers());
+
         return model;
     }
-
     @GetMapping("/login")
     public ModelAndView getLoginPage() {
         ModelAndView model = new ModelAndView();
@@ -55,7 +61,6 @@ public class HomeController {
         model.addObject("request", new LoginRequest());
         return model;
     }
-
     @GetMapping("/register")
     public ModelAndView getRegisterPage() {
         ModelAndView model = new ModelAndView();
@@ -67,7 +72,6 @@ public class HomeController {
         model.addObject("request", new RegisterRequest());
         return model;
     }
-
     @PostMapping("/register")
     public ModelAndView registerNewUser(RegisterRequest registerRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

@@ -251,4 +251,8 @@ public class TaskService {
     public List<Task> getRecentActivityForDay(LocalDateTime now) {
         return taskRepository.findAllByUpdatedAtBetween(now, now.toLocalDate().atTime(23, 59, 59));
     }
+
+    public int getAllTasksCount() {
+      return  taskRepository.findAll().size();
+    }
 }

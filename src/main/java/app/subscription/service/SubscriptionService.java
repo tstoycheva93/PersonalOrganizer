@@ -5,6 +5,7 @@ import app.subscription.model.SubscriptionPeriod;
 import app.subscription.model.SubscriptionType;
 import app.subscription.repository.SubscriptionRepository;
 import app.user.model.User;
+import app.user.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -13,8 +14,10 @@ import java.math.BigDecimal;
 public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
 
+
     public SubscriptionService(SubscriptionRepository subscriptionRepository) {
         this.subscriptionRepository = subscriptionRepository;
+
     }
 
     public Subscription createDefaultSubscription(User user) {
@@ -33,6 +36,7 @@ public class SubscriptionService {
         if (subscription.getType().equals(SubscriptionType.FREE)) {
             subscription.setPeriod(SubscriptionPeriod.MONTHLY);
             subscription.setType(SubscriptionType.PREMIUM);
+
             subscription.setRenewable(false);
         } else {
             subscription.setPeriod(SubscriptionPeriod.YEARLY);

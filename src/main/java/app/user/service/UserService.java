@@ -6,9 +6,12 @@ import app.exception.PasswordDoesNotMatch;
 import app.exception.UsernameAlreadyExistException;
 import app.security.AuthUser;
 import app.subscription.model.Subscription;
+import app.subscription.model.SubscriptionType;
 import app.subscription.service.SubscriptionService;
 import app.user.model.User;
+import app.user.model.UserRole;
 import app.user.repository.UserRepository;
+import app.web.dto.EditUserRequestByAdmin;
 import app.web.dto.RegisterRequest;
 import app.web.dto.UserRequest;
 import jakarta.transaction.Transactional;
@@ -52,7 +55,6 @@ public class UserService implements UserDetailsService {
     public User getById(UUID userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Wrong credentials"));
     }
-
     @Transactional
     public void registerUser(RegisterRequest input) {
         checkForExistingEmailAndUsername(input.getUsername(), input.getEmail());
@@ -111,6 +113,59 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
         }
         throw new PasswordDoesNotMatch("The passwords does not match");
+    }
+    public int countTotalUsers() {
+        return userRepository.findAll().size();
+    }
+
+//    public int getActiveUsers() {
+//        int count=0;
+//        for (User user : userRepository.findAll()) {
+//            if(user.isActive()) {
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
+
+    public int getPremiumUsers() {
+        int count=0;
+        for (User user : userRepository.findAll()) {
+            if(user.getSubscription().getType().equals(SubscriptionType.PREMIUM)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public List<User> topUsers() {
+        return userRepository.findTop3BySubscriptionTypeOrderBySubscriptionCountDesc(SubscriptionType.PREMIUM);
+    }
+
+    public void updateSubscriptionCountIfPremium(User user) {
+            if(user.getSubscription().getType().equals(SubscriptionType.PREMIUM)) {
+                user.setSubscriptionCount(user.getSubscriptionCount() + 1);
+                userRepository.save(user);
+            }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findUserByRole(UserRole.USER);
+    }
+
+    public void editUserByAdmin(EditUserRequestByAdmin userRequest) {
+        User user = getById(userRequest.getUserId());
+        if(userRequest.getStatus().equals("active")) {
+            user.setActive(true);
+        }else{
+            user.setActive(false);
+        }
+        user.getSubscription().setType(userRequest.getSubscriptionType());
+        if(userRequest.getSubscriptionType().equals(SubscriptionType.PREMIUM)) {
+            user.setSubscriptionCount(user.getSubscriptionCount() + 1);
+        }
+        userRepository.save(user);
+
     }
 
     public List<User> getAll() {

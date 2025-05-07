@@ -17,19 +17,19 @@
             <div class="admin-dashboard">
                 <div class="stat-card">
                     <div class="stat-title">Total Users</div>
-                    <div class="stat-value">1,234</div>
+                    <div th:text="${totalUserCount}" class="stat-value"></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Active Users</div>
-                    <div class="stat-value">987</div>
+                    <div  th:text="${totalActiveUsers}"class="stat-value"></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Premium Users</div>
-                    <div class="stat-value">456</div>
+                    <div th:text="${totalPremiumUsers}" class="stat-value"></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Tasks Created</div>
-                    <div class="stat-value">12,345</div>
+                    <div th:text="${totalNumberOfTasks}" class="stat-value"></div>
                 </div>
             </div>
 
@@ -47,29 +47,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>#1234</td>
-                                <td>John Doe</td>
-                                <td>john@example.com</td>
-                                <td>Premium</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                              
-                            </tr>
-                            <tr>
-                                <td>#1235</td>
-                                <td>Jane Smith</td>
-                                <td>jane@example.com</td>
-                                <td>Free</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                          
-                            </tr>
-                            <tr>
-                                <td>#1236</td>
-                                <td>Bob Johnson</td>
-                                <td>bob@example.com</td>
-                                <td>Premium</td>
-                                <td><span class="status-badge status-inactive">Inactive</span></td>
-                             
+                            <tr th:each=" user,stat : ${topUsers}">
+                                <td th:text="${stat.index+1}"></td>
+                                <td th:text="${user.getName()}"></td>
+                                <td th:text="${user.getEmail()}"></td>
+                                <td th:text="${user.getSubscription().getType()}"></td>
+
+                                <td>
+                                    <span th:if="${user.isActive()}" class="status-badge status-active">Active</span>
+                                    <span th:unless="${user.isActive()}" class="status-badge status-inactive">Inactive</span>
+                                </td>
+
+
                             </tr>
                         </tbody>
                     </table>

@@ -39,6 +39,7 @@ public class SubscriptionController {
         ModelAndView modelAndView = new ModelAndView("redirect:/subscriptions");
         User user = userService.getById(id);
         subscriptionService.createPremiumSubscriptionForUser(user);
+        userService.updateSubscriptionCountIfPremium(user);
         return modelAndView;
     }
 }
