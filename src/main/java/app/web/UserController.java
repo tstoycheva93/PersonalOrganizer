@@ -11,10 +11,7 @@ import app.web.dto.UserRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -28,9 +25,16 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ModelAndView getUsersPage() {
+    public ModelAndView getUsersPage(@RequestParam (name="name",required = false)String name,
+                                     @RequestParam (name="status",required = false)String status,
+                                     @RequestParam (name="sort",required = false)String sortType,
+                                     @RequestParam (name="subscriptionType",required = false)String subscriptionType) {
         ModelAndView model=new ModelAndView();
-        model.addObject("allUsers",userService.getAllUsers());
+        model.addObject("name",name);
+        model.addObject("status",status);
+        model.addObject("sort",sortType);
+        model.addObject("subscriptionType",subscriptionType);
+        model.addObject("allUsers",userService.getUsers(name,status,sortType,subscriptionType));
         model.addObject("accTypes", SubscriptionType.values());
         model.addObject("statusType", SubscriptionType.values());
         model.addObject("userRequest",new EditUserRequestByAdmin());

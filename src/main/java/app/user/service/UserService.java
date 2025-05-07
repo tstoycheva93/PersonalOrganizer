@@ -6,8 +6,8 @@ import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionType;
 import app.subscription.service.SubscriptionService;
 import app.user.model.User;
-import app.user.model.UserRole;
 import app.user.repository.UserRepository;
+import app.utils.DateUtils;
 import app.web.dto.EditUserRequestByAdmin;
 import app.web.dto.RegisterRequest;
 import app.web.dto.UserRequest;
@@ -26,6 +26,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -50,6 +51,7 @@ public class UserService implements UserDetailsService {
     public User getById(UUID userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Wrong credentials"));
     }
+
     @Transactional
     public void registerUser(RegisterRequest input) {
         checkForExistingEmailAndUsername(input.getUsername(), input.getEmail());
@@ -110,15 +112,16 @@ public class UserService implements UserDetailsService {
         }
         throw new PasswordDoesNotMatch("The passwords does not match");
     }
+
     public int countTotalUsers() {
         return userRepository.findAll().size();
     }
 
 
     public int getPremiumUsers() {
-        int count=0;
+        int count = 0;
         for (User user : userRepository.findAll()) {
-            if(user.getSubscription().getType().equals(SubscriptionType.PREMIUM)) {
+            if (user.getSubscription().getType().equals(SubscriptionType.PREMIUM)) {
                 count++;
             }
         }
@@ -130,25 +133,22 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateSubscriptionCountIfPremium(User user) {
-            if(user.getSubscription().getType().equals(SubscriptionType.PREMIUM)) {
-                user.setSubscriptionCount(user.getSubscriptionCount() + 1);
-                userRepository.save(user);
-            }
+        if (user.getSubscription().getType().equals(SubscriptionType.PREMIUM)) {
+            user.setSubscriptionCount(user.getSubscriptionCount() + 1);
+            userRepository.save(user);
+        }
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findUserByRole(UserRole.USER);
-    }
 
     public void editUserByAdmin(EditUserRequestByAdmin userRequest) {
         User user = getById(userRequest.getUserId());
-        if(userRequest.getStatus().equals("active")) {
+        if (userRequest.getStatus().equals("active")) {
             user.setActive(true);
-        }else{
+        } else {
             user.setActive(false);
         }
         user.getSubscription().setType(userRequest.getSubscriptionType());
-        if(userRequest.getSubscriptionType().equals(SubscriptionType.PREMIUM)) {
+        if (userRequest.getSubscriptionType().equals(SubscriptionType.PREMIUM)) {
             user.setSubscriptionCount(user.getSubscriptionCount() + 1);
         }
         userRepository.save(user);
@@ -159,7 +159,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public int getActiveUsers() {
+    public List<User> getUsersByStatusList(boolean isActive) {
+        return getAll().stream()
+                .filter(user -> user.isActive() == isActive)
+                .toList();
+    }
+
+    public int getActiveUsersCount() {
         return getAll().stream()
                 .filter(User::isActive)
                 .toList()
@@ -264,5 +270,55 @@ public class UserService implements UserDetailsService {
     public void deleteUser(User user) {
         user.setActive(false);
         userRepository.save(user);
+    }
+
+    public List<User> getUsers(String name, String status, String sortType, String subscriptionType) {
+        List<User> users = getAll();
+
+
+
+
+        if (status!=null && !status.isEmpty()) {
+           boolean isActive = status.equals("active");
+            if (isActive) {
+                users = getUsersByStatusList(true);
+            } else users = getUsersByStatusList(false);
+        }
+        if (name != null && (!name.isEmpty())) {
+            users = users.stream()
+                    .filter(u -> u.getUsername()
+                            .toLowerCase()
+                            .contains(name.toLowerCase())).toList();
+        }
+        if (subscriptionType != null && (!subscriptionType.isEmpty())) {
+            SubscriptionType selectedType = SubscriptionType.valueOf(subscriptionType.toUpperCase());
+            users = users.stream()
+                    .filter(u -> u.getSubscription().getType().equals(selectedType))
+                    .toList();
+        }
+
+        if (sortType != null && (!sortType.isEmpty())) {
+            switch (sortType) {
+                case "subscription":
+                    users = users.stream()
+                            .sorted(Comparator.comparing(u->u.getSubscription().getType()))
+                            .collect(Collectors.toList());
+                    break;
+                case "date":
+                    users = users.stream()
+                            .sorted(Comparator.comparing(User::getCreatedAt))
+                            .collect(Collectors.toList());
+                    break;
+                case "name":
+                    users = users.stream()
+                            .sorted(Comparator.comparing(User::getName))
+                            .collect(Collectors.toList());
+                    break;
+            }
+        }
+
+
+        return users;
+
     }
 }

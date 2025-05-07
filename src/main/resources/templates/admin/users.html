@@ -19,38 +19,41 @@
         <div class="admin-header">
             <h1>User Management</h1>
         </div>
+        <form id="myForm" th:action="@{/users}" th:method="GET">
         <div class="filters-section">
             <div class="filters-grid">
                 <div class="filter-group">
                     <label class="filter-label">Search</label>
-                    <input type="text" class="filter-input" placeholder="Search users...">
+                    <input th:value="${name}" id="userByName" name="name" type="text" class="filter-input" placeholder="Search users...">
                 </div>
                 <div class="filter-group">
                     <label class="filter-label">Status</label>
-                    <select class="filter-select">
-                        <option value="">All Statuses</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                    <select onchange="this.form.submit()" name="status" class="filter-select">
+                        <option th:selected="${status} == ''" value="">All Statuses</option>
+                        <option th:selected="${status} == 'active' " value="active">Active</option>
+                        <option th:selected="${status} == 'inactive' " value="inactive">Inactive</option>
                     </select>
+
                 </div>
                 <div class="filter-group">
                     <label class="filter-label">Subscription</label>
-                    <select class="filter-select">
-                        <option value="">All Plans</option>
-                        <option value="free">Free</option>
-                        <option value="premium">Premium</option>
+                    <select onchange="this.form.submit()" name="subscriptionType" class="filter-select">
+                        <option th:selected="${subscriptionType}==''" value="">All Plans</option>
+                        <option th:selected="${subscriptionType}=='free'" value="free">Free</option>
+                        <option th:selected="${subscriptionType}=='premium'" value="premium">Premium</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label class="filter-label">Sort By</label>
-                    <select class="filter-select">
-                        <option value="name">Name</option>
-                        <option value="date">Date Joined</option>
-                        <option value="subscription">Subscription</option>
+                    <select onchange="this.form.submit()" name="sort" class="filter-select">
+                        <option th:selected="${sort}=='name'" value="name">Name</option>
+                        <option th:selected="${sort}=='date'" value="date">Date Joined</option>
+                        <option th:selected="${sort}=='subscription'" value="subscription">Subscription</option>
                     </select>
                 </div>
             </div>
         </div>
+        </form>
 
         <div class="table-container">
             <table>
@@ -164,6 +167,16 @@
         });
     });
 </script>
+<script>
+    const input = document.getElementById("userByName");
+    const form = document.getElementById("myForm");
 
+    input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            form.submit();
+        };
+    });
+</script>
 </body>
 </html>

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +63,7 @@ public class StatisticsController {
         modelAndView.setViewName("admin/analytics");
         int allCreatedTask = taskService.getAllCreatedTasks();
         int allUsers = userService.getAll().size();
-        int activeUsers = userService.getActiveUsers();
+        int activeUsers = userService.getActiveUsersCount();
         Map<String, Integer> chartInfo = userService.getChartInfoForUsers(growth);
         modelAndView.addObject("allCreatedTasks", allCreatedTask);
         modelAndView.addObject("allUsers", allUsers);

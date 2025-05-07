@@ -7,7 +7,6 @@ import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
-import org.springframework.boot.Banner;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -48,7 +47,7 @@ public class HomeController {
         model.setViewName("admin/admin");
         model.addObject("totalUserCount", userService.countTotalUsers());
         model.addObject("totalNumberOfTasks", taskService.getAllTasksCount());
-        model.addObject("totalActiveUsers", userService.getActiveUsers());
+        model.addObject("totalActiveUsers", userService.getActiveUsersCount());
         model.addObject("totalPremiumUsers", userService.getPremiumUsers());
         model.addObject("topUsers", userService.topUsers());
 
