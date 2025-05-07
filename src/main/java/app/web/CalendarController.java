@@ -54,6 +54,7 @@ public class CalendarController {
             date = "Today";
         }
         model.addObject("date", date);
+        model.addObject("page", "Calendar");
         return model;
     }
 }

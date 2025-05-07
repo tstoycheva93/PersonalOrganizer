@@ -23,6 +23,8 @@ public class NotificationController {
         model.addObject("subject", "");
         model.addObject("content", "");
         model.setViewName("admin/send-email");
+        model.addObject("page", "Email");
+
         return model;
     }
 

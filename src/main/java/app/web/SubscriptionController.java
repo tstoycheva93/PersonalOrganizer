@@ -31,6 +31,7 @@ public class SubscriptionController {
         User user = userService.getById(authUser.getUserId());
         model.setViewName("client/subscriptions");
         model.addObject("user", user);
+        model.addObject("page", "Account");
         return model;
     }
 

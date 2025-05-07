@@ -1,33 +1,40 @@
 <div class="sidebar" th:fragment="client-menu">
     <div class="logo">
-        <span>✨</span> Taskly
+        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> Taskly
     </div>
     <ul class="nav-menu">
         <li class="nav-item">
-            <a href="/home" class="nav-link active">
+            <a th:href="@{/home}" th:class="${page == 'Calendar' ? 'nav-link active' : 'nav-link'}">
                 <span>📅</span> Calendar
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/tasks" class="nav-link">
+            <a th:href="@{/tasks}" th:class="${page == 'Tasks' ? 'nav-link active' : 'nav-link'}">
                 <span>📝</span> My Tasks
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/statistics" class="nav-link">
+            <a th:href="@{/statistics}" th:class="${page == 'Statistics' ? 'nav-link active' : 'nav-link'}">
                 <span>📊</span> My Stats
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/accounts" class="nav-link">
+            <a th:href="@{/accounts}" th:class="${page == 'Account' ? 'nav-link active' : 'nav-link'}">
                 <span>👤</span> Account
             </a>
         </li>
+
+
         <li class="nav-item">
-            <a href="/faq" class="nav-link">
-                <span>👤</span> Help & FAQ
+            <a th:href="@{/faq}" th:class="${page == 'FAQ' ? 'nav-link active' : 'nav-link'}">
+                <span>📞</span> Help & FAQ
             </a>
         </li>
+
+
         <li class="nav-item">
             <a href="/logout" class="nav-link">
                 <span>🚪</span> Log Out
@@ -36,37 +43,41 @@
     </ul>
 </div>
 
-
 <div class="sidebar" th:fragment="admin-menu">
     <div class="logo">
-        <span>✨</span> Taskly Admin
+        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> Taskly Admin
     </div>
     <ul class="nav-menu">
-        <li class="nav-item">
-            <a href="/dashboard" class="nav-link active">
+         <li class="nav-item">
+            <a th:href="@{/dashboard}" th:class="${page == 'Dashboard' ? 'nav-link active' : 'nav-link'}">
                 <span>📊</span> Dashboard
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/users" class="nav-link">
+            <a th:href="@{/users}" th:class="${page == 'Users' ? 'nav-link active' : 'nav-link'}">
                 <span>👥</span> Users
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/settings" class="nav-link">
+            <a th:href="@{/settings}" th:class="${page == 'Settings' ? 'nav-link active' : 'nav-link'}">
                 <span>⚙️</span> Settings
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/analytics" class="nav-link">
+            <a th:href="@{/analytics}" th:class="${page == 'Analytics' ? 'nav-link active' : 'nav-link'}">
                 <span>📈</span> Analytics
             </a>
         </li>
+
         <li class="nav-item">
-            <a href="/email" class="nav-link">
-                <span>📧</span> Send Email
+            <a th:href="@{/email}" th:class="${page == 'Email' ? 'nav-link active' : 'nav-link'}">
+                <span>📧</span> Email
             </a>
         </li>
+
         <li class="nav-item">
             <a href="/logout" class="nav-link">
                 <span>🚪</span> Log Out

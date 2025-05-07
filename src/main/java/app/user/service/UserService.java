@@ -272,6 +272,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void setNewPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
     public List<User> getUsers(String name, String status, String sortType, String subscriptionType) {
         List<User> users = getAll();
 

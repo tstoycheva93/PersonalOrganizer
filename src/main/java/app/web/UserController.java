@@ -39,6 +39,7 @@ public class UserController {
         model.addObject("statusType", SubscriptionType.values());
         model.addObject("userRequest",new EditUserRequestByAdmin());
         model.setViewName("admin/users");
+        model.addObject("page", "Users");
         return model;
     }
     @PutMapping("/save")
