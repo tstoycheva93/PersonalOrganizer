@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - Frequently Asked Questions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/client/faq.css" rel="stylesheet">
+    <link href="/css/client/sidebar.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <th:block th:insert="fragments/menu :: client-menu"></th:block>
+    <div class="main-content">
+        <div class="faq-container">
+            <a href="help.html" class="back-link">← Back to Help & Documentation</a>
+
+            <h1 class="page-title">Frequently Asked Questions</h1>
+            <p class="page-description">Find quick answers to common questions about Taskly.</p>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search for questions...">
+            </div>
+
+            <div class="faq-categories">
+                <button class="category-btn active">All Questions</button>
+                <button class="category-btn">Account & Settings</button>
+                <button class="category-btn">Tasks & Projects</button>
+                <button class="category-btn">Calendar & Scheduling</button>
+                <button class="category-btn">Statistics & Reports</button>
+                <button class="category-btn">Subscription & Billing</button>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="section-title"><span>👤</span> Account & Settings</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I change my password?</div>
+                    <div class="faq-answer">
+                        <p>To change your password:</p>
+                        <ol>
+                            <li>Go to the Account page</li>
+                            <li>Click the "Edit" button in the bottom right corner</li>
+                            <li>Click "Change password"</li>
+                            <li>Enter your current password and your new password</li>
+                            <li>Click "Update Password"</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I change my profile photo?</div>
+                    <div class="faq-answer">
+                        <p>Yes, you can change your profile photo by:</p>
+                        <ol>
+                            <li>Going to the Account page</li>
+                            <li>Clicking the "Edit" button in the bottom right corner</li>
+                            <li>Hovering over your profile photo and clicking "Change Photo"</li>
+                            <li>Selecting a new image from your device</li>
+                            <li>Confirming the change</li>
+                        </ol>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I delete my account?</div>
+                    <div class="faq-answer">
+                        <p>To delete your account:</p>
+                        <ol>
+                            <li>Go to the Account page</li>
+                            <li>Click the "Edit" button in the bottom right corner</li>
+                            <li>Scroll down and click "Delete account"</li>
+                            <li>Confirm your decision in the popup dialog</li>
+                        </ol>
+                        <p><strong>Warning:</strong> This action cannot be undone. All your data will be permanently deleted.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="section-title"><span>📝</span> Tasks & Projects</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I create a new task?</div>
+                    <div class="faq-answer">
+                        <p>There are several ways to create a new task:</p>
+                        <ol>
+                            <li>From the My Tasks page: Click the "+" button in the top right corner</li>
+                            <li>From the Calendar page: Click on a day and then the "+" button in the task list</li>
+                            <li>From any page: Use the keyboard shortcut Ctrl+N (Windows) or Cmd+N (Mac)</li>
+                        </ol>
+                        <p>Fill in the task details and click "Create Task" to save.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I edit or delete a task?</div>
+                    <div class="faq-answer">
+                        <p>To edit a task:</p>
+                        <ol>
+                            <li>Click on the task to open its details</li>
+                            <li>Click the "Edit" button</li>
+                            <li>Make your changes</li>
+                            <li>Click "Save Changes"</li>
+                        </ol>
+                        <p>To delete a task:</p>
+                        <ol>
+                            <li>Click on the task to open its details</li>
+                            <li>Click the "Delete" button</li>
+                            <li>Confirm the deletion in the popup dialog</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I mark a task as completed?</div>
+                    <div class="faq-answer">
+                        <p>There are two ways to mark a task as completed:</p>
+                        <ol>
+                            <li>From the task list: Click the checkbox next to the task</li>
+                            <li>From the task details: Open the task and click the "Mark as Completed" button</li>
+                        </ol>
+                        <p>Completed tasks will be moved to the "Completed" section of your task list.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I set reminders for tasks?</div>
+                    <div class="faq-answer">
+                        <p>Yes, you can set reminders for tasks with due dates:</p>
+                        <ol>
+                            <li>Create or edit a task</li>
+                            <li>Set a due date for the task</li>
+                            <li>Enable the "Reminder" option</li>
+                            <li>Select when you want to be reminded (e.g., 1 day before, 1 hour before)</li>
+                        </ol>
+                        <p>You'll receive notifications at the specified time.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="section-title"><span>📅</span> Calendar & Scheduling</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I view my tasks on the calendar?</div>
+                    <div class="faq-answer">
+                        <p>Tasks with due dates automatically appear on the calendar. The number of tasks for each day is displayed in the calendar cell. Click on a day to see the detailed list of tasks for that day.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I change the calendar view?</div>
+                    <div class="faq-answer">
+                        <p>Currently, Taskly only offers a monthly calendar view. We're working on adding weekly and daily views in a future update.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I add a task directly from the calendar?</div>
+                    <div class="faq-answer">
+                        <p>To add a task directly from the calendar:</p>
+                        <ol>
+                            <li>Click on a day in the calendar</li>
+                            <li>Click the "+" button in the task list section</li>
+                            <li>Fill in the task details</li>
+                            <li>Click "Create Task"</li>
+                        </ol>
+                        <p>The task will automatically be scheduled for the selected day.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="section-title"><span>💰</span> Subscription & Billing</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">What's the difference between Free and Pro plans?</div>
+                    <div class="faq-answer">
+                        <p>The Free plan includes:</p>
+                        <ul>
+                            <li>Up to 10 tasks</li>
+                            <li>Basic calendar</li>
+                            <li>Email support</li>
+                        </ul>
+                        <p>The Pro plan includes:</p>
+                        <ul>
+                            <li>Unlimited tasks</li>
+                            <li>Advanced calendar</li>
+                            <li>Priority support</li>
+                            <li>Team collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I upgrade to the Pro plan?</div>
+                    <div class="faq-answer">
+                        <p>To upgrade to the Pro plan:</p>
+                        <ol>
+                            <li>Go to the Subscriptions page</li>
+                            <li>Click "See available plans"</li>
+                            <li>Select the Pro plan</li>
+                            <li>Click "Upgrade Now"</li>
+                            <li>Enter your payment information</li>
+                            <li>Click "Subscribe"</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I cancel my subscription?</div>
+                    <div class="faq-answer">
+                        <p>To cancel your subscription:</p>
+                        <ol>
+                            <li>Go to the Subscriptions page</li>
+                            <li>Click "Unsubscribe now"</li>
+                            <li>Confirm your cancellation in the popup dialog</li>
+                        </ol>
+                        <p>Your subscription will remain active until the end of your current billing period.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Will I lose access to premium features if I cancel?</div>
+                    <div class="faq-answer">
+                        <p>No, you will continue to have access to premium features until the end of your current billing period. After that, your account will revert to the Free plan, and you'll only have access to the features included in that plan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <h3>Still Have Questions?</h3>
+                <p>Our support team is here to assist you with any questions or issues you may have.</p>
+                <button class="contact-btn">Contact Support</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple search functionality
+    const searchInput = document.querySelector('.search-input');
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question').textContent.toLowerCase();
+            const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+            if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    // Category filtering
+    const categoryBtns = document.querySelectorAll('.category-btn');
+
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            categoryBtns.forEach(b => b.classList.remove('active'));
+
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            // If "All Questions" is clicked, show all sections
+            if (this.textContent === 'All Questions') {
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    section.style.display = 'block';
+                });
+            } else {
+                // Hide all sections first
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Show the section that matches the category
+                const category = this.textContent.split(' &')[0].toLowerCase();
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    const sectionTitle = section.querySelector('.section-title').textContent.toLowerCase();
+                    if (sectionTitle.includes(category)) {
+                        section.style.display = 'block';
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

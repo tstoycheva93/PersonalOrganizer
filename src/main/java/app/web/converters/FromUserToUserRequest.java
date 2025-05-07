@@ -13,7 +13,6 @@ public class FromUserToUserRequest implements Converter<User, UserRequest> {
                 .email(source.getEmail())
                 .password(source.getPassword())
                 .name(source.getName())
-                .photo(source.getPhotoPath())
                 .username(source.getUsername())
                 .build();
     }

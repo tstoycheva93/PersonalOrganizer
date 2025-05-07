@@ -1,9 +1,6 @@
 package app.user.service;
 
-import app.exception.EmailAlreadyExistException;
-import app.exception.EmailNotFoundException;
-import app.exception.PasswordDoesNotMatch;
-import app.exception.UsernameAlreadyExistException;
+import app.exception.*;
 import app.security.AuthUser;
 import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionType;
@@ -21,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import app.utils.DateUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -30,7 +26,6 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -111,6 +106,7 @@ public class UserService implements UserDetailsService {
         if (passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(userRequest.getConfirmPassword()));
             userRepository.save(user);
+            return;
         }
         throw new PasswordDoesNotMatch("The passwords does not match");
     }
@@ -118,15 +114,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll().size();
     }
 
-//    public int getActiveUsers() {
-//        int count=0;
-//        for (User user : userRepository.findAll()) {
-//            if(user.isActive()) {
-//                count++;
-//            }
-//        }
-//        return count;
-//    }
 
     public int getPremiumUsers() {
         int count=0;
@@ -272,5 +259,10 @@ public class UserService implements UserDetailsService {
             throw new EmailNotFoundException("Email not found");
         }
         return userWithEmail.get();
+    }
+
+    public void deleteUser(User user) {
+        user.setActive(false);
+        userRepository.save(user);
     }
 }

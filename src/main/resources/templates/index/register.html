@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="background-animation"></div>
-    
+
     <div class="page-container">
         <div class="signup-container">
             <div class="logo"><a class="logo" style="text-decoration: none; color: #00B4D8;" href="index.html">
@@ -18,8 +18,8 @@
             </a>
         </div>
             <h1 class="form-title">Create your account</h1>
-            
             <form id="signup-form" th:action="@{'/register'}" th:object="${request}" th:method="POST">
+                <p th:text="${message}" style="color: red; font-weight: bold; margin-top: 10px;"></p>
                 <div class="name-fields">
                     <div class="form-group">
                         <label for="firstName">Name</label>
@@ -81,7 +81,7 @@
         <div class="info-container">
             <h2>Join thousands of users who trust Taskly</h2>
             <p style="font-size: 1.1rem; opacity: 0.9;">Experience the most intuitive task management platform designed for modern professionals.</p>
-            
+
             <ul class="feature-list">
                 <li class="feature-item">
                     <span class="feature-icon">🎯</span>
@@ -125,29 +125,13 @@
                 input.parentElement.classList.remove('focused');
             });
         });
-
-        // Handle enter key to move to next field
-        // inputs.forEach((input, index) => {
-        //     input.addEventListener('keypress', (e) => {
-        //         if (e.key === 'Enter') {
-        //             e.preventDefault();
-        //             if (index < inputs.length - 1) {
-        //                 inputs[index + 1].focus();
-        //             } else {
-        //                 form.submit();
-        //             }
-        //         }
-        //     });
-        // });
-
-        // Password strength checker
         function checkPasswordStrength(password) {
             let strength = 0;
             if (password.length >= 8) strength++;
             if (password.match(/[A-Z]/)) strength++;
             if (password.match(/[0-9]/)) strength++;
             if (password.match(/[^A-Za-z0-9]/)) strength++;
-            
+
             passwordStrengthBar.className = 'password-strength-bar';
             if (strength >= 4) passwordStrengthBar.classList.add('strong');
             else if (strength >= 2) passwordStrengthBar.classList.add('medium');
@@ -166,27 +150,6 @@
                 confirmPasswordInput.style.borderColor = 'var(--error-color)';
             }
         });
-
-        // Form submission
-        // form.addEventListener('submit', (e) => {
-          //  e.preventDefault();
-            
-            // if (passwordInput.value !== confirmPasswordInput.value) {
-            //     alert('Passwords do not match!');
-            //     return;
-            // }
-
-            // Add ripple effect to button
-            // const submitBtn = form.querySelector('.submit-btn');
-            // submitBtn.style.transform = 'scale(0.95)';
-            // setTimeout(() => {
-            //     submitBtn.style.transform = 'scale(1)';
-            // }, 100);
-
-            // Add your form submission logic here
-        // });
-
-        // Add hover effect to form groups
         document.querySelectorAll('.form-group').forEach(group => {
             group.addEventListener('mouseover', () => {
                 group.style.transform = 'translateX(5px)';
@@ -198,4 +161,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

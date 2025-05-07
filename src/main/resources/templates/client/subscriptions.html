@@ -20,7 +20,7 @@
 
             <div class="user-info">
                 <h3>Username</h3>
-                <p>username</p>
+                <p th:text="${user.username}">username</p>
             </div>
 
             <div class="current-plan">
@@ -31,22 +31,48 @@
                         <p th:text="${user.subscription.type.name()}">Free Plan</p>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn btn-outline" id="billingBtn" data-bs-toggle="modal"
+                        <button class="btn btn-outline white" id="billingBtn" data-bs-toggle="modal"
                                 data-bs-target="#billingModal">Billing details →
                         </button>
-                        <button class="btn btn-outline" id="plansBtn" data-bs-toggle="modal"
+                        <button class="btn btn-outline white" id="plansBtn" data-bs-toggle="modal"
                                 data-bs-target="#plansModal">See available plans →
                         </button>
                     </div>
                 </div>
             </div>
 
-            <button th:if="${user.subscription.type.name() == 'PREMIUM'}" class="btn btn-danger">Unsubscribe now
+            <button th:if="${user.subscription.type.name() == 'PREMIUM'}" data-bs-target="#cancellationConfirmationModal" data-bs-toggle="modal" class="btn btn-danger">Unsubscribe now
             </button>
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="cancellationConfirmationModal" tabindex="-1"
+     aria-labelledby="cancellationConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="cancellationConfirmationModalLabel">Confirm Cancellation</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                    <h4>Are you sure you want to cancel your subscription?</h4>
+                    <p>You will lose access to premium features at the end of your current billing period.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-bs-dismiss="modal">Keep Subscription</button>
+                <form th:action="@{'/subscriptions/user/'+${user.id}}" th:method="PUT">
+                    <button th:unless="${user.subscription.type.name() =='FREE'}" id="confirmCancellationBtn"
+                            class="btn btn-danger">
+                        Yes, Cancel Subscription
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Billing Details Modal -->
 <div class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -83,11 +109,9 @@
                         <button th:if="${user.subscription.type.name() =='FREE'}" class="btn btn-primary" disabled>
                             Current Plan
                         </button>
-                        <form th:action="@{'/subscriptions/user/'+${user.id}}" th:method="PUT">
-                            <button th:unless="${user.subscription.type.name() =='FREE'}" class="btn btn-primary">
-                                Downgrade
-                            </button>
-                        </form>
+                        <button th:unless="${user.subscription.type.name() =='FREE'}" data-bs-target="#cancellationConfirmationModal" data-bs-toggle="modal" class="btn btn-primary">
+                            Downgrade
+                        </button>
                     </div>
                     <div class="plan-card">
                         <h4>Pro Plan</h4>

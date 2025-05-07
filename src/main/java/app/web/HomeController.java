@@ -55,10 +55,13 @@ public class HomeController {
         return model;
     }
     @GetMapping("/login")
-    public ModelAndView getLoginPage() {
+    public ModelAndView getLoginPage(@RequestParam(name = "error",required = false) String error) {
         ModelAndView model = new ModelAndView();
         model.setViewName("index/login");
         model.addObject("request", new LoginRequest());
+        if (error != null) {
+            model.addObject("message", "Incorrect username or password!");
+        }
         return model;
     }
     @GetMapping("/register")
@@ -102,6 +105,15 @@ public class HomeController {
                 + "We’re updating our system to serve you better. "
                 + "Please check back later. Thank you for your patience!");
         model.addObject("type", "loggedOut");
+        return model;
+    }
+
+    @GetMapping("/faq")
+    public ModelAndView getFaqPage(@AuthenticationPrincipal AuthUser authUser) {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("client/faq");
+        User user = userService.getById(authUser.getUserId());
+        model.addObject("user", user);
         return model;
     }
 
