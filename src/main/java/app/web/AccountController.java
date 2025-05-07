@@ -7,10 +7,7 @@ import app.web.dto.UserRequest;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
@@ -52,6 +49,15 @@ public class AccountController {
         User user = userService.getById(id);
         userService.editPassword(user, userRequest);
         model.setViewName("redirect:/accounts");
+        return model;
+    }
+
+    @DeleteMapping("/{id}")
+    public ModelAndView deleteAccountPage(@PathVariable("id") UUID id) {
+        ModelAndView model = new ModelAndView();
+        User user = userService.getById(id);
+        userService.deleteUser(user);
+        model.setViewName("redirect:/login");
         return model;
     }
 }
