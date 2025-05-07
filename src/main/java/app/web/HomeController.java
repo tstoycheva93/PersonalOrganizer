@@ -1,11 +1,14 @@
 package app.web;
 
+import app.notification.service.NotificationService;
 import app.security.AuthUser;
 import app.settings.SettingsProperties;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.web.dto.ForgotPasswordRequest;
 import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
+import jakarta.mail.MessagingException;
 import org.springframework.boot.Banner;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,10 +24,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
     private final UserService userService;
     private final SettingsProperties settingsProperties;
+    private final NotificationService notificationService;
 
-    public HomeController(UserService userService, SettingsProperties settingsProperties) {
+    public HomeController(UserService userService, SettingsProperties settingsProperties, NotificationService notificationService) {
         this.userService = userService;
         this.settingsProperties = settingsProperties;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/")
@@ -51,7 +57,7 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public ModelAndView getLoginPage(@RequestParam(name = "error",required = false) String error) {
+    public ModelAndView getLoginPage(@RequestParam(name = "error", required = false) String error) {
         ModelAndView model = new ModelAndView();
         model.setViewName("index/login");
         model.addObject("request", new LoginRequest());
@@ -113,6 +119,22 @@ public class HomeController {
         User user = userService.getById(authUser.getUserId());
         model.addObject("user", user);
         model.addObject("page", "FAQ");
+        return model;
+    }
+
+    @GetMapping("/forgot-password")
+    public ModelAndView getForgotPasswordPage() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("index/forgot-password");
+        model.addObject("forgotPassword", new ForgotPasswordRequest());
+        return model;
+    }
+
+    @PutMapping("/forgot-password")
+    public ModelAndView forgotPasswordPage(ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("redirect:/login");
+        notificationService.sendNewPassword(forgotPasswordRequest);
         return model;
     }
 

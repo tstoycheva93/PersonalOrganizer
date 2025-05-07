@@ -6,159 +6,164 @@
     <title>Sign Up - Taskly</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="/css/index/register.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
 
 </head>
 <body>
-    <div class="background-animation"></div>
+<div class="background-animation"></div>
 
-    <div class="page-container">
-        <div class="signup-container">
-            <div class="logo"><a class="logo" style="text-decoration: none; color: #00B4D8;" href="index.html">
-                <span>✨</span> Taskly
-            </a>
+<div class="page-container">
+    <div class="signup-container">
+        <div class="logo"><a class="logo" style="text-decoration: none; color: #00B4D8;" href="index.html">
+            <span><img style="height: 150px;width: 180px" src="/images/logo.png" alt="✨ Taskly"></span>
+        </a>
         </div>
-            <h1 class="form-title">Create your account</h1>
-            <form id="signup-form" th:action="@{'/register'}" th:object="${request}" th:method="POST">
-                <p th:text="${message}" style="color: red; font-weight: bold; margin-top: 10px;"></p>
-                <div class="name-fields">
-                    <div class="form-group">
-                        <label for="firstName">Name</label>
-                        <input th:field="*{name}" type="text" id="firstName" name="firstName" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input th:field="*{email}" type="email" id="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input th:field="*{username}" type="text" id="username" name="username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input th:field="*{password}" type="password" id="password" name="password" required>
-                    <div class="password-strength">
-                        <div class="password-strength-bar"></div>
-                    </div>
-                    <div class="password-requirements">
-                        Password must contain at least:
-                        <ul>
-                            <li>8 characters</li>
-                            <li>1 uppercase letter</li>
-                            <li>1 number</li>
-                            <li>1 special character</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input th:field="*{confirmPassword}" type="password" id="confirmPassword" name="confirmPassword" required>
-                </div>
-
-                <div class="terms-group">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">
-                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                    </label>
-                </div>
-
-                <button type="submit" class="submit-btn">Create Account</button>
-            </form>
-
-            <p class="disclaimer" style="text-align: center; margin-top: 1.5rem; color: var(--text-color); font-size: 0.9rem;">
-                By signing up, you'll start with our free plan. You can upgrade to premium features anytime!
-            </p>
-
-            <div class="login-link" style="text-align: center; margin-top: 1.5rem;">
-                Already have an account? <a href="/login" style="color: var(--primary-dark); text-decoration: none; font-weight: 500;">Log in instead</a>
+        <h1 class="form-title">Create your account</h1>
+        <form id="signup-form" th:action="@{'/register'}" th:object="${request}" th:method="POST">
+            <p th:text="${message}" style="color: red; font-weight: bold; margin-top: 10px;"></p>
+            <div class="form-group">
+                <label for="firstName">Name</label>
+                <input th:field="*{name}" type="text" id="firstName" name="firstName" required>
             </div>
-        </div>
 
-        <div class="info-container">
-            <h2>Join thousands of users who trust Taskly</h2>
-            <p style="font-size: 1.1rem; opacity: 0.9;">Experience the most intuitive task management platform designed for modern professionals.</p>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input th:field="*{email}" type="email" id="email" name="email" required>
+            </div>
 
-            <ul class="feature-list">
-                <li class="feature-item">
-                    <span class="feature-icon">🎯</span>
-                    <div>
-                        <h3>Smart Task Organization</h3>
-                        <p>Organize tasks your way with custom categories and priority levels</p>
-                    </div>
-                </li>
-                <li class="feature-item">
-                    <span class="feature-icon">📊</span>
-                    <div>
-                        <h3>Progress Analytics</h3>
-                        <p>Track your productivity with detailed insights and reports</p>
-                    </div>
-                </li>
-                <li class="feature-item">
-                    <span class="feature-icon">🔄</span>
-                    <div>
-                        <h3>Seamless Integration</h3>
-                        <p>Connect with your favorite tools and boost your workflow</p>
-                    </div>
-                </li>
-            </ul>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input th:field="*{username}" type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input th:field="*{password}" type="password" id="password" name="password" required>
+                <div class="password-strength">
+                    <div class="password-strength-bar"></div>
+                </div>
+                <div class="password-requirements">
+                    Password must contain at least:
+                    <ul>
+                        <li>8 characters</li>
+                        <li>1 uppercase letter</li>
+                        <li>1 number</li>
+                        <li>1 special character</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input th:field="*{confirmPassword}" type="password" id="confirmPassword" name="confirmPassword"
+                       required>
+            </div>
+
+            <div class="terms-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">Create Account</button>
+        </form>
+
+        <p class="disclaimer"
+           style="text-align: center; margin-top: 1.5rem; color: var(--text-color); font-size: 0.9rem;">
+            By signing up, you'll start with our free plan. You can upgrade to premium features anytime!
+        </p>
+
+        <div class="login-link" style="text-align: center; margin-top: 1.5rem;">
+            Already have an account? <a href="/login"
+                                        style="color: var(--primary-dark); text-decoration: none; font-weight: 500;">Log
+            in instead</a>
         </div>
     </div>
 
-    <script>
-        const form = document.getElementById('signup-form');
-        const inputs = form.querySelectorAll('input');
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const passwordStrengthBar = document.querySelector('.password-strength-bar');
+    <div class="info-container">
+        <h2>Join thousands of users who trust Taskly</h2>
+        <p style="font-size: 1.1rem; opacity: 0.9;">Experience the most intuitive task management platform designed for
+            modern professionals.</p>
 
-        // Add focused class to form groups
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                input.parentElement.classList.add('focused');
-            });
+        <ul class="feature-list">
+            <li class="feature-item">
+                <span class="feature-icon">🎯</span>
+                <div>
+                    <h3>Smart Task Organization</h3>
+                    <p>Organize tasks your way with custom categories and priority levels</p>
+                </div>
+            </li>
+            <li class="feature-item">
+                <span class="feature-icon">📊</span>
+                <div>
+                    <h3>Progress Analytics</h3>
+                    <p>Track your productivity with detailed insights and reports</p>
+                </div>
+            </li>
+            <li class="feature-item">
+                <span class="feature-icon">🔄</span>
+                <div>
+                    <h3>Seamless Integration</h3>
+                    <p>Connect with your favorite tools and boost your workflow</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
 
-            input.addEventListener('blur', () => {
-                input.parentElement.classList.remove('focused');
-            });
+<script>
+    const form = document.getElementById('signup-form');
+    const inputs = form.querySelectorAll('input');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const passwordStrengthBar = document.querySelector('.password-strength-bar');
+
+    // Add focused class to form groups
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+            input.parentElement.classList.add('focused');
         });
-        function checkPasswordStrength(password) {
-            let strength = 0;
-            if (password.length >= 8) strength++;
-            if (password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^A-Za-z0-9]/)) strength++;
 
-            passwordStrengthBar.className = 'password-strength-bar';
-            if (strength >= 4) passwordStrengthBar.classList.add('strong');
-            else if (strength >= 2) passwordStrengthBar.classList.add('medium');
-            else if (strength >= 1) passwordStrengthBar.classList.add('weak');
+        input.addEventListener('blur', () => {
+            input.parentElement.classList.remove('focused');
+        });
+    });
+
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.match(/[A-Z]/)) strength++;
+        if (password.match(/[0-9]/)) strength++;
+        if (password.match(/[^A-Za-z0-9]/)) strength++;
+
+        passwordStrengthBar.className = 'password-strength-bar';
+        if (strength >= 4) passwordStrengthBar.classList.add('strong');
+        else if (strength >= 2) passwordStrengthBar.classList.add('medium');
+        else if (strength >= 1) passwordStrengthBar.classList.add('weak');
+    }
+
+    passwordInput.addEventListener('input', () => {
+        checkPasswordStrength(passwordInput.value);
+    });
+
+    // Password confirmation checker
+    confirmPasswordInput.addEventListener('input', () => {
+        if (confirmPasswordInput.value === passwordInput.value) {
+            confirmPasswordInput.style.borderColor = 'var(--success-color)';
+        } else {
+            confirmPasswordInput.style.borderColor = 'var(--error-color)';
         }
-
-        passwordInput.addEventListener('input', () => {
-            checkPasswordStrength(passwordInput.value);
+    });
+    document.querySelectorAll('.form-group').forEach(group => {
+        group.addEventListener('mouseover', () => {
+            group.style.transform = 'translateX(5px)';
         });
 
-        // Password confirmation checker
-        confirmPasswordInput.addEventListener('input', () => {
-            if (confirmPasswordInput.value === passwordInput.value) {
-                confirmPasswordInput.style.borderColor = 'var(--success-color)';
-            } else {
-                confirmPasswordInput.style.borderColor = 'var(--error-color)';
-            }
+        group.addEventListener('mouseout', () => {
+            group.style.transform = 'translateX(0)';
         });
-        document.querySelectorAll('.form-group').forEach(group => {
-            group.addEventListener('mouseover', () => {
-                group.style.transform = 'translateX(5px)';
-            });
-
-            group.addEventListener('mouseout', () => {
-                group.style.transform = 'translateX(0)';
-            });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>

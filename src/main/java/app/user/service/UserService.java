@@ -220,4 +220,9 @@ public class UserService implements UserDetailsService {
         user.setActive(false);
         userRepository.save(user);
     }
+
+    public void setNewPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }
