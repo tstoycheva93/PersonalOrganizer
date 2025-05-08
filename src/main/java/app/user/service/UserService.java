@@ -142,6 +142,12 @@ public class UserService implements UserDetailsService {
 
     public void editUserByAdmin(EditUserRequestByAdmin userRequest) {
         User user = getById(userRequest.getUserId());
+        if(userRequest.getStatus()==null){
+            throw new UserStatusException("Must set user status!");
+        }
+        if(userRequest.getSubscriptionType()==null){
+            throw new UserSubsException("Must set subscription!");
+        }
         if (userRequest.getStatus().equals("active")) {
             user.setActive(true);
         } else {

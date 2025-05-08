@@ -4,9 +4,11 @@ import app.security.AuthUser;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.UserRequest;
+import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,9 +38,15 @@ public class AccountController {
     }
 
     @PutMapping("/{id}")
-    public ModelAndView updateAccountPage(@PathVariable("id") UUID id, UserRequest userRequest) {
-        ModelAndView model = new ModelAndView();
+    public ModelAndView updateAccountPage(@PathVariable("id") UUID id, @Valid @ModelAttribute("request") UserRequest userRequest, BindingResult bindingResult) {
         User user = userService.getById(id);
+        ModelAndView model = new ModelAndView();
+        model.addObject("user", user);
+        if(bindingResult.hasErrors()) {
+            model.setViewName("client/account");
+        return model;
+        }
+
         userService.editUser(user, userRequest);
         model.setViewName("redirect:/accounts");
         model.addObject("page", "Account");

@@ -2,7 +2,9 @@ package app.task.service;
 
 import app.category.model.Category;
 import app.category.service.CategoryService;
+import app.exception.*;
 import app.recurring_task.service.RecurringTaskService;
+import app.subscription.model.SubscriptionType;
 import app.task.model.Task;
 import app.task.model.TaskReminder;
 import app.task.model.TaskStatus;
@@ -21,6 +23,7 @@ import java.nio.file.AccessDeniedException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -41,7 +44,37 @@ public class TaskService {
     }
 
     @Transactional
-    public void createTask(User user, TaskRequest task) {
+    public void createTask(User user, TaskRequest task)  {
+        if(task.getTitle().isEmpty() || (task.getTitle().length() <4 || task.getTitle().length() > 100)) {
+            throw new TitleException("Task title length must be between 4 and 100 characters");
+        }
+        if(task.getDescription().isEmpty() || (task.getDescription().length() <20 || task.getDescription().length() > 1000)) {
+            throw new DescriptionException("Task description length must be between 20 and 1000 characters");
+        }
+        if(task.getStartDate().isAfter(ChronoLocalDate.from(task.getDueDate()))){
+            throw new DateValidation("The start date must be before due date!");
+        }
+        if(task.getStartDate().isBefore(LocalDate.now())){
+            throw new StartDateInPast("Start date can not be in the past!");
+        }
+        if(task.getPriority()==null){
+            throw new PriorityException("You must set priority to the task!");
+        }
+        if(task.getStatus()==null){
+            throw new StatusException("You must set status to the task!");
+        }
+        if(task.getCategoryId()==null){
+            throw new CategoryException("You must set category for the task!");
+        }
+        int tasksNumber = 0;
+        for (Category category : user.getCategories()) {
+           tasksNumber+= category.getTasks().size();
+           if(tasksNumber>10 && user.getSubscription().getType().equals(SubscriptionType.FREE)){
+               throw new NotPremiumUser("You are out of free tasks,upgrade now!");
+           }
+        }
+
+
         Category categoryById = categoryService.getById(task.getCategoryId());
         Task newtask = conversionService.convert(task, Task.class);
         newtask.setUser(user);

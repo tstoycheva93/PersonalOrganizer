@@ -2,6 +2,7 @@ package app.web;
 
 import app.category.model.Category;
 import app.category.service.CategoryService;
+import app.exception.NotPremiumUser;
 import app.recurring_task.model.RecurringTaskType;
 import app.security.AuthUser;
 import app.task.model.Task;
@@ -13,10 +14,12 @@ import app.user.service.UserService;
 import app.web.dto.CategoryRequest;
 import app.web.dto.TaskRequest;
 import jakarta.annotation.Priority;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,6 +51,7 @@ public class TaskController {
         if (sort != null) {
             tasks = taskService.sort(tasks, sort);
         }
+        model.addObject("user", userById);
         model.addObject("categoryRequest", new CategoryRequest());
         model.addObject("taskRequest", new TaskRequest());
         model.addObject("listOfCategories", userById.getCategories());
@@ -81,13 +85,12 @@ public class TaskController {
     }
 
     @PostMapping()
-    public ModelAndView addTask(@AuthenticationPrincipal AuthUser authUser, TaskRequest taskRequest) {
+    public ModelAndView addTask(@AuthenticationPrincipal AuthUser authUser, TaskRequest taskRequest)  {
         ModelAndView model = new ModelAndView();
         model.setViewName("redirect:/tasks");
         User user = userService.getById(authUser.getUserId());
         taskService.createTask(user, taskRequest);
         return model;
-
     }
 
     @PostMapping("/category")

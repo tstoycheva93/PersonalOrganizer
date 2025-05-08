@@ -709,5 +709,175 @@
         });
     });
 </script>
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Task</h5>
+                <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/tasks}" th:method="POST" th:object="${taskRequest}">
+                    <div class="form-group form-full-width">
+                        <label for="taskTitle">Title</label>
+                        <input th:field="*{title}" type="text" id="taskTitle" class="form-control"
+                               placeholder="Enter task title" required>
+                    </div>
+                    <div class="form-group form-full-width">
+                        <label for="taskDescription">Description</label>
+                        <textarea th:field="*{description}" id="taskDescription" class="form-control"
+                                  placeholder="Enter task description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskCategory">Category</label>
+                        <select id="taskCategory" class="form-control" th:field="*{categoryId}" required>
+                            <option value="">Select category</option>
+                            <!-- Iterate over the category list -->
+                            <option th:each="category : ${listOfCategories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"> <!-- Set value as id and display name -->
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date</label>
+                        <input th:field="*{dueDate}" type="datetime-local" id="taskDueDate" name="dueDate"
+                               class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input th:field="*{startDate}" type="date" id="startDate" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <div class="toggle-group" id="priorityToggle">
+                            <!-- Iterate over priorities and create a button for each -->
+                            <div th:each="priority : ${priorities}">
+                                <button type="button" class="toggle-btn"
+                                        th:data-value="${priority}" th:text="${priority.name()}">
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" th:field="*{priority}" id="selectedPriority">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="toggle-group" id="statusToggle">
+                            <div th:each="status : ${status}">
+                                <button type="button" class="toggle-btn"
+                                        th:data-value="${status}" th:text="${status.name()}">
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" th:field="*{status}" id="selectedStatus">
+                    </div>
+
+                    <div class="form-group form-full-width">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isRecurring"> This is a recurring task
+                        </label>
+                        <div class="recurring-options" id="recurringOptions">
+                            <div class="form-group">
+                                <label for="recurringType">Recurring Type</label>
+                                <select th:field="*{recurringTaskType}" id="recurringType" class="form-control">
+                                    <option value="">Select a type</option>
+                                    <option th:each="type : ${T(app.recurring_task.model.RecurringTaskType).values()}"
+                                            th:value="${type}"
+                                            th:text="${type.name().toLowerCase()}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endDate">End Occurrence</label>
+                                <input th:field="*{endOccurrence}" type="date" id="endDate" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Create Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to format the current date and time to match the datetime-local and date input formats
+    function formatDateForInput() {
+        const now = new Date();
+
+        // Get the current year, month, day, hours, and minutes
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        // Format the date-time string to 'yyyy-MM-ddTHH:mm' for datetime-local
+        const datetimeLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        // Format the date string to 'yyyy-MM-dd' for date inputs
+        const date = `${year}-${month}-${day}`;
+
+        return { datetimeLocal, date };
+    }
+
+    // Set the min attributes of the input fields for date and datetime-local
+    document.addEventListener('DOMContentLoaded', function () {
+        const { datetimeLocal, date } = formatDateForInput();
+
+        // Set min for datetime-local fields
+        document.querySelectorAll('input[type="datetime-local"]').forEach(function (input) {
+            input.min = datetimeLocal;
+        });
+
+        // Set min for date fields
+        document.querySelectorAll('input[type="date"]').forEach(function (input) {
+            input.min = date;
+        });
+    });
+</script>
+<script>
+    // Function to format the current date and time to match the datetime-local and date input formats
+    function formatDateForInput() {
+        const now = new Date();
+
+        // Get the current year, month, day, hours, and minutes
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        // Format the date-time string to 'yyyy-MM-ddTHH:mm' for datetime-local
+        const datetimeLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+        // Format the date string to 'yyyy-MM-dd' for date inputs
+        const date = `${year}-${month}-${day}`;
+
+        return { datetimeLocal, date };
+    }
+
+    // Set the min attributes of the input fields for date and datetime-local
+    document.addEventListener('DOMContentLoaded', function () {
+        const { datetimeLocal, date } = formatDateForInput();
+
+        // Set min for datetime-local fields
+        document.querySelectorAll('input[type="datetime-local"]').forEach(function (input) {
+            input.min = datetimeLocal;
+        });
+
+        // Set min for date fields
+        document.querySelectorAll('input[type="date"]').forEach(function (input) {
+            input.min = date;
+        });
+    });
+</script>
 </body>
 </html>

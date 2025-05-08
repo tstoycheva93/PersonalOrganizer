@@ -1,6 +1,6 @@
 <div class="sidebar" th:fragment="client-menu">
     <div class="logo">
-        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> Taskly
+        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> <span th:text="${user.getUsername()}"></span>
     </div>
     <ul class="nav-menu">
         <li class="nav-item">
@@ -45,7 +45,7 @@
 
 <div class="sidebar" th:fragment="admin-menu">
     <div class="logo">
-        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> Taskly Admin
+        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span>  Admin
     </div>
     <ul class="nav-menu">
          <li class="nav-item">
