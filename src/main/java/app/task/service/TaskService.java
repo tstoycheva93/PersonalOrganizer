@@ -152,12 +152,17 @@ public class TaskService {
         return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("No such task"));
     }
 
-    public int getTaskCountByDateAndUser(LocalDate date, User user) {
-        LocalDateTime startDay = date.atStartOfDay();
-        LocalDateTime endDay = date.atTime(23, 59, 59);
-        List<Task> tasks = taskRepository.findAllByUserAndDueDateBetween(user, startDay, endDay);
-        return tasks.size();
+    public Map<LocalDate, Integer> getTaskCountsBetweenDatesAndUser(LocalDate start, LocalDate end, User user) {
+        List<Object[]> results = taskRepository.countTasksByDateBetweenAndUser(start.atStartOfDay(), end.atTime(23, 59, 59), user);
+        Map<LocalDate, Integer> taskCounts = new HashMap<>();
+        for (Object[] result : results) {
+            LocalDateTime date = (LocalDateTime) result[0];
+            Long count = (Long) result[1];
+            taskCounts.put(date.toLocalDate(), count.intValue());
+        }
+        return taskCounts;
     }
+
 
     @Transactional
     public void deleteTask(User user, UUID id) throws AccessDeniedException {
@@ -253,6 +258,6 @@ public class TaskService {
     }
 
     public int getAllTasksCount() {
-      return  taskRepository.findAll().size();
+        return taskRepository.findAll().size();
     }
 }

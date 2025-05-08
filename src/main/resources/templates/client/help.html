@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - Help & Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/css/client/help.css" rel="stylesheet">
+    <link href="/css/client/sidebar.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
+</head>
+<body>
+<div class="container">
+    <th:block th:insert="fragments/menu :: client-menu"></th:block>
+
+    <div class="main-content">
+        <div class="help-container">
+            <h1 class="page-title">Help & Documentation</h1>
+            <p class="page-description">Find answers to your questions and learn how to make the most of Taskly.</p>
+
+            <div class="help-grid">
+                <div class="help-card">
+                    <h3><span>🚀</span> Getting Started</h3>
+                    <p>New to Taskly? Learn the basics and get up to speed quickly.</p>
+                    <a href="#getting-started">Learn more →</a>
+                </div>
+                <div class="help-card">
+                    <h3><span>📝</span> Task Management</h3>
+                    <p>Create, organize, and track your tasks effectively.</p>
+                    <a href="#task-management">Learn more →</a>
+                </div>
+                <div class="help-card">
+                    <h3><span>📅</span> Calendar Features</h3>
+                    <p>Make the most of our calendar and scheduling tools.</p>
+                    <a href="#calendar-features">Learn more →</a>
+                </div>
+                <div class="help-card">
+                    <h3><span>📊</span> Statistics & Reports</h3>
+                    <p>Understand your productivity patterns and improve.</p>
+                    <a href="#statistics">Learn more →</a>
+                </div>
+            </div>
+
+            <div class="help-section" id="getting-started">
+                <h2 class="section-title"><span>🚀</span> Getting Started</h2>
+                <div class="section-content">
+                    <p>Welcome to Taskly! This guide will help you get started with our task management platform.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Creating Your First Task</h3>
+                    <ol>
+                        <li>Navigate to the "My Tasks" page from the sidebar menu</li>
+                        <li>Click the "+" button in the top right corner</li>
+                        <li>Fill in the task details (title, description, due date, etc.)</li>
+                        <li>Click "Create Task" to save</li>
+                    </ol>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Understanding the Dashboard</h3>
+                    <p>Your dashboard provides an overview of your tasks and productivity metrics. You can:</p>
+                    <ul>
+                        <li>View upcoming deadlines</li>
+                        <li>See your task completion rate</li>
+                        <li>Check your productivity trends</li>
+                        <li>Access your most recent tasks</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="help-section" id="task-management">
+                <h2 class="section-title"><span>📝</span> Task Management</h2>
+                <div class="section-content">
+                    <p>Taskly offers powerful tools to help you manage your tasks efficiently.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Task Categories</h3>
+                    <p>Organize your tasks by categories to keep your workflow organized:</p>
+                    <ul>
+                        <li>Work - Professional tasks and projects</li>
+                        <li>Personal - Individual tasks and errands</li>
+                        <li>Study - Educational and learning tasks</li>
+                        <li>Health - Fitness and wellness activities</li>
+                        <li>Shopping - Purchases and errands</li>
+                    </ul>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Task Status</h3>
+                    <p>Track your progress with different task statuses:</p>
+                    <ul>
+                        <li>Not Started - Tasks you haven't begun yet</li>
+                        <li>In Progress - Tasks you're currently working on</li>
+                        <li>Completed - Finished tasks</li>
+                        <li>Archived - Tasks you want to keep but no longer need to track</li>
+                    </ul>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Editing and Deleting Tasks</h3>
+                    <p>To edit a task, click on it to open the task details, then click the edit button. To delete a task, open the task details and click the delete button. You'll be asked to confirm before the task is permanently removed.</p>
+                </div>
+            </div>
+
+            <div class="help-section" id="calendar-features">
+                <h2 class="section-title"><span>📅</span> Calendar Features</h2>
+                <div class="section-content">
+                    <p>The calendar view helps you visualize your schedule and plan your time effectively.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Navigating the Calendar</h3>
+                    <p>Use the arrow buttons to move between months. The current month is displayed at the top of the calendar.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Viewing Tasks on the Calendar</h3>
+                    <p>Tasks with due dates will appear on the calendar. The number of tasks for each day is displayed in the calendar cell. Click on a day to see the detailed list of tasks for that day.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Adding Tasks from the Calendar</h3>
+                    <p>You can add a new task directly from the calendar view by clicking on a day and then the "+" button in the task list section.</p>
+                </div>
+            </div>
+
+            <div class="help-section" id="statistics">
+                <h2 class="section-title"><span>📊</span> Statistics & Reports</h2>
+                <div class="section-content">
+                    <p>Track your productivity and identify patterns with our statistics tools.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Task Completion Rate</h3>
+                    <p>The task completion rate shows the percentage of tasks you've completed within a given time period. This helps you assess your productivity and set realistic goals.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Task Distribution</h3>
+                    <p>The task distribution chart shows how your tasks are distributed across different categories. This helps you balance your workload and identify areas that might need more attention.</p>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0;">Time Management</h3>
+                    <p>The time management chart shows when you're most productive during the day. Use this information to schedule important tasks during your peak productivity hours.</p>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2 class="section-title"><span>❓</span> Frequently Asked Questions</h2>
+                <div class="section-content">
+                    <p>Find quick answers to common questions about Taskly.</p>
+                    <a href="/faq" class="faq-link">View All FAQs →</a>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <h3>Still Need Help?</h3>
+                <p>Our support team is here to assist you with any questions or issues you may have.</p>
+                <button class="contact-btn">Contact Support</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -28,7 +28,7 @@ public class HomeController {
     private final SettingsProperties settingsProperties;
     private final NotificationService notificationService;
 
-    public HomeController(UserService userService, TaskService taskService,SettingsProperties settingsProperties,NotificationService notificationService) {
+    public HomeController(UserService userService, TaskService taskService, SettingsProperties settingsProperties, NotificationService notificationService) {
         this.userService = userService;
         this.taskService = taskService;
         this.settingsProperties = settingsProperties;
@@ -125,6 +125,16 @@ public class HomeController {
     public ModelAndView getFaqPage(@AuthenticationPrincipal AuthUser authUser) {
         ModelAndView model = new ModelAndView();
         model.setViewName("client/faq");
+        User user = userService.getById(authUser.getUserId());
+        model.addObject("user", user);
+        model.addObject("page", "FAQ");
+        return model;
+    }
+
+    @GetMapping("/help")
+    public ModelAndView getHelpPage(@AuthenticationPrincipal AuthUser authUser) {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("client/help");
         User user = userService.getById(authUser.getUserId());
         model.addObject("user", user);
         model.addObject("page", "FAQ");

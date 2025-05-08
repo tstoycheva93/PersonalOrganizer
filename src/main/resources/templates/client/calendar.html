@@ -54,11 +54,15 @@
                 <div class="calendar-day-header">Sat</div>
                 <div class="calendar-day-header">Sun</div>
 
-                <a th:href="'/calendar?date='+${day.date==null?' ':day.date}"  th:each="day : ${calendarDays}" class="calendar-day"
+                <a th:if="${user.subscription.type.name()=='PREMIUM'}" th:href="'/calendar?date='+${day.date==null?' ':day.date}"  th:each="day : ${calendarDays}" class="calendar-day"
                      th:classappend="${(day.isToday() ? 'today ' : '') +  (day.isSelected() ? 'selected ' : '') +(day.taskCount > 3 ? 'load-high' : (day.taskCount > 1 ? 'load-medium' : (day.date == null ? ' ' : ' load-low')))}">
                     <div th:if="${day.date != null}" class="date" th:text="${day.date.getDayOfMonth()}">1</div>
                     <div th:if="${day.date !=null}" class="task-count" th:text="${day.taskCount==0 ? 'No task' : day.taskCount + ' tasks'}">3 tasks
                     </div>
+                </a>
+                <a th:if="${user.subscription.type.name()=='FREE'}" th:each="day : ${calendarDays}" class="calendar-day"
+                   th:classappend="${(day.isToday() ? 'today ' : '') +  (day.isSelected() ? 'selected ' : '') +(day.taskCount > 3 ? 'load-high' : (day.taskCount > 1 ? 'load-medium' : (day.date == null ? ' ' : ' load-low')))}">
+                    <div th:if="${day.date != null}" class="date" th:text="${day.date.getDayOfMonth()}">1</div>
                 </a>
             </div>
         </div>
