@@ -4,6 +4,7 @@ import app.category.model.Category;
 import app.category.repository.CategoryRepository;
 import app.task.model.Task;
 import app.user.model.User;
+import app.exception.*;
 import app.user.service.UserService;
 import app.web.dto.CategoryCombinedWithTask;
 import app.web.dto.CategoryRequest;
@@ -42,6 +43,15 @@ public class CategoryService {
     }
 
     public void createCategory(User user, CategoryRequest categoryRequest) {
+        if (categoryRequest.getCategoryName() == null || categoryRequest.getCategoryName().isEmpty()
+                || categoryRequest.getCategoryName().length() < 4 || categoryRequest.getCategoryName().length() > 50) {
+            throw new CategoryInvalidLengthException("The category size must be between 4 and 50 characters");
+        }
+        if (categoryRequest.getCategoryColor() == null || categoryRequest.getCategoryColor().isEmpty()
+                || categoryRequest.getCategoryColor().length() < 4 || categoryRequest.getCategoryColor().length() > 50) {
+            throw new InvalidColorException("The color is invalid");
+        }
+
         Category category = Category.builder()
                 .name(categoryRequest.getCategoryName())
                 .color(categoryRequest.getCategoryColor())

@@ -128,4 +128,22 @@ public class ExceptionHandlerAdvice {
         modelAndView.addObject("title", "Unsuccessful editing, must set a SUBSCRIPTION TYPE! ");
         return modelAndView;
     }
+    @ExceptionHandler(InvalidColorException.class)
+    public ModelAndView handleInvalidColorException(InvalidColorException e) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index/error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("type", "color");
+        modelAndView.addObject("title", "Invald Color");
+        return modelAndView;
+    }
+    @ExceptionHandler(CategoryInvalidLengthException.class)
+    public ModelAndView handleCategoryInvalidLengthException(CategoryInvalidLengthException e) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("index/error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("type", "category");
+        modelAndView.addObject("title", "Invalid Category Length");
+        return modelAndView;
+    }
 }

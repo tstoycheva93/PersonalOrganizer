@@ -10,6 +10,7 @@ import app.web.dto.ForgotPasswordRequest;
 import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.boot.Banner;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

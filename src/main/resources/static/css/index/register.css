@@ -30,7 +30,11 @@ body {
     position: relative;
     overflow-x: hidden;
 }
-
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
 .background-animation {
     position: fixed;
     top: 0;
