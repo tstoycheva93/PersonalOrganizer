@@ -1,8 +1,10 @@
 package app.notification.service;
 
 import app.notification.model.Notification;
+import app.notification.repository.NotificationRepository;
 import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionType;
+import app.task.model.Task;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.ForgotPasswordRequest;
@@ -18,18 +20,21 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class NotificationService {
     private final JavaMailSender mailSender;
     private final UserService userService;
+    private final NotificationRepository notificationRepository;
     @Value("${spring.mail.username}")
     private String adminEmail;
 
-    public NotificationService(JavaMailSender mailSender, UserService userService) {
+    public NotificationService(JavaMailSender mailSender, UserService userService, NotificationRepository notificationRepository) {
         this.mailSender = mailSender;
         this.userService = userService;
+        this.notificationRepository = notificationRepository;
     }
 
     public List<String> getDatesPrettyPrinting(List<Notification> notifications) {
@@ -259,5 +264,14 @@ public class NotificationService {
         }
 
         return password.toString();
+    }
+
+    public Notification save(Notification notification) {
+        return notificationRepository.save(notification);
+    }
+
+    public Notification getByTask(Task task) {
+        Optional<Notification> byTask = notificationRepository.findByTask(task);
+        return byTask.orElse(null);
     }
 }

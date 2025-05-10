@@ -93,9 +93,9 @@
                 <button type="button" class="close-modal" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="notifications-list">
-                <div class="notification-item" th:if="${user.getNotifications().isEmpty()==false}">
+                <div class="notification-item" th:each="notification, stat : ${user.getNotifications()}" th:if="${user.getNotifications().isEmpty()==false}">
                     <div class="notification-icon">📅</div>
-                    <div th:each="notification, stat : ${user.getNotifications()}" class="notification-content">
+                    <div class="notification-content">
                         <div class="notification-title" th:text="${notification.subject}">Meeting Reminder</div>
                         <div class="notification-text" th:text="${notification.body}">Team meeting starts in 30
                             minutes

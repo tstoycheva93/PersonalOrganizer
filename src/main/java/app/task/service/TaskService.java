@@ -293,4 +293,8 @@ public class TaskService {
     public int getAllTasksCount() {
         return taskRepository.findAll().size();
     }
+
+    public List<Task> getAllTask() {
+        return taskRepository.findAll();
+    }
 }
