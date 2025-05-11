@@ -1,6 +1,6 @@
 <div class="sidebar" th:fragment="client-menu">
     <div class="logo">
-        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> <span th:text="${user.getUsername()}"></span>
+        <span><img style="height: 30px;width: 40px" src="/images/logo.png" alt="✨ Taskly"></span> <span th:text="'Hi '+${user.getUsername()}"></span>
     </div>
     <ul class="nav-menu">
         <li class="nav-item">

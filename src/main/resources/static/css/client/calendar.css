@@ -453,7 +453,7 @@ body {
 
 /* Add styles for today and selected day */
 .calendar-day.today {
-    border: 4px solid #FADE80FF;
+    border: 4px solid rgba(63, 89, 229, 0.95);
     box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
 }
 

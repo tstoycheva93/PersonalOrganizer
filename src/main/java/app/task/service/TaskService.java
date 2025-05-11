@@ -196,7 +196,11 @@ public class TaskService {
         for (Object[] result : results) {
             LocalDateTime date = (LocalDateTime) result[0];
             Long count = (Long) result[1];
-            taskCounts.put(date.toLocalDate(), count.intValue());
+            if(taskCounts.containsKey(date.toLocalDate())) {
+                taskCounts.put(date.toLocalDate(), taskCounts.get(date.toLocalDate())+count.intValue());
+            }else{
+                taskCounts.put(date.toLocalDate(), count.intValue());
+            }
         }
         return taskCounts;
     }
