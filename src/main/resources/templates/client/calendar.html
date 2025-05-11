@@ -63,6 +63,7 @@
                 <a th:if="${user.subscription.type.name()=='FREE'}" th:each="day : ${calendarDays}" class="calendar-day"
                    th:classappend="${(day.isToday() ? 'today ' : '') +  (day.isSelected() ? 'selected ' : '') +(day.taskCount > 3 ? 'load-high' : (day.taskCount > 1 ? 'load-medium' : (day.date == null ? ' ' : ' load-low')))}">
                     <div th:if="${day.date != null}" class="date" th:text="${day.date.getDayOfMonth()}">1</div>
+                    <div th:if="${day.date !=null}" class="task-count" th:text="${day.taskCount==0 ? 'Free day!' : day.taskCount + ' tasks'}">3 tasks</div>
                 </a>
             </div>
         </div>
