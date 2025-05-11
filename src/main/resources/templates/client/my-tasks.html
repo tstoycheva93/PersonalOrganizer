@@ -28,9 +28,9 @@
                     <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModal">
                         <span>➕</span> New Category
                     </button>
-<!--                    <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModalDelete">-->
-<!--                        <span>➖</span> Delete Category-->
-<!--                    </button>-->
+                    <!--                    <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModalDelete">-->
+                    <!--                        <span>➖</span> Delete Category-->
+                    <!--                    </button>-->
                     <form th:action="'/tasks'">
                         <select name="sort" class="sort-dropdown" onchange="this.form.submit()">
                             <option>Sort by</option>
@@ -49,7 +49,14 @@
                     </div>
                 </div>
                 <div class="categories-list">
-                    <a th:href="@{'/tasks'}" style="background: black; color: white">All</a>
+                    <a th:href="@{'/tasks'}"
+                       class="category-color"
+                       data-id="all"
+                       data-name="All"
+                       style="--category-color: #000000;"
+                       >
+                        All
+                    </a>
                     <a th:href="@{'/tasks/category/'+ ${category.id}}"
                        th:each="category : ${listOfCategories}"
                        th:class="'category-color'"
@@ -59,13 +66,13 @@
                        th:text="${category.name}"
                        th:classappend="${category.id == activeCategoryId ? 'chosen' : ' '}"
                        oncontextmenu="showContextMenu(event, this)">
-                       <span th:text="${category.name}">Category</span>
+                        <span th:text="${category.name}">Category</span>
                     </a>
                 </div>
 
                 <!-- Custom context menu -->
-                <form id="deleteForm" th:method="GET" >
-<!--                    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+                <form id="deleteForm" th:method="GET">
+                    <!--                    <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
                     <div id="customMenu" class="custom-context-menu">
                         <div onclick="handleDelete()">🗑️ Delete</div>
                     </div>
@@ -361,6 +368,18 @@
                             </label>
                             <label class="color-option" style="background: #2ECC71">
                                 <input type="radio" th:field="*{categoryColor}" value="#2ECC71">
+                            </label>
+                            <label class="color-option" style="background: #f9519d">
+                                <input type="radio" th:field="*{categoryColor}" value="#f9519d">
+                            </label>
+                            <label class="color-option" style="background: #8e3ac5">
+                                <input type="radio" th:field="*{categoryColor}" value="#8e3ac5">
+                            </label>
+                            <label class="color-option" style="background: #7209B7">
+                                <input type="radio" th:field="*{categoryColor}" value="#7209B7">
+                            </label>
+                            <label class="color-option" style="background: #4CC9F0">
+                                <input type="radio" th:field="*{categoryColor}" value="#4CC9F0">
                             </label>
                         </div>
                     </div>
