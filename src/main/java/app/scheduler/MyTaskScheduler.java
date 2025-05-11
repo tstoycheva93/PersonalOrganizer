@@ -57,7 +57,7 @@ public class MyTaskScheduler {
 
     private static Notification buildNotificationForTaskThatOnlyLeft30Minutes(Task task, Duration duration) {
         return Notification.builder()
-                .task(task)
+                .taskId(task.getId())
                 .user(task.getUser())
                 .isRead(false)
                 .isDeleted(false)
@@ -69,7 +69,7 @@ public class MyTaskScheduler {
 
     private static Notification buildNotificationIfTaskIsNotFinishedOnTime(Task task) {
         return Notification.builder()
-                .task(task)
+                .taskId(task.getId())
                 .user(task.getUser())
                 .isRead(false)
                 .isDeleted(false)

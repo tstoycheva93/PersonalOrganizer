@@ -271,7 +271,7 @@ public class NotificationService {
     }
 
     public Notification getByTask(Task task) {
-        Optional<Notification> byTask = notificationRepository.findByTask(task);
+        Optional<Notification> byTask = notificationRepository.findByTaskId(task.getId());
         return byTask.orElse(null);
     }
 }

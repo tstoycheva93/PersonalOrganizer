@@ -33,9 +33,7 @@ public class Notification {
     @Column(nullable = false)
     private String body;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id", nullable = false)
-    private Task task;
+    private UUID taskId;
 
     @Column(nullable = false)
     private String subject;

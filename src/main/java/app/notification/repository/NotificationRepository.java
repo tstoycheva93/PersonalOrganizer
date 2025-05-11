@@ -12,5 +12,5 @@ import java.util.UUID;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
-    Optional<Notification> findByTask(Task task);
+    Optional<Notification> findByTaskId(UUID taskId);
 }
