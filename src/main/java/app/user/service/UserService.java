@@ -1,5 +1,6 @@
 package app.user.service;
 
+import app.category.model.Category;
 import app.exception.*;
 import app.security.AuthUser;
 import app.subscription.model.Subscription;
@@ -331,5 +332,10 @@ public class UserService implements UserDetailsService {
 
         return users;
 
+    }
+
+    public void deleteCategory(User user, Category category) {
+        user.getCategories().remove(category);
+        userRepository.save(user);
     }
 }

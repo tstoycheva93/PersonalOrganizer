@@ -3,11 +3,13 @@ package app.category.service;
 import app.category.model.Category;
 import app.category.repository.CategoryRepository;
 import app.task.model.Task;
+import app.task.service.TaskService;
 import app.user.model.User;
 import app.exception.*;
 import app.user.service.UserService;
 import app.web.dto.CategoryCombinedWithTask;
 import app.web.dto.CategoryRequest;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,10 +20,12 @@ import java.util.*;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserService userService;
+    private final TaskService taskService;
 
-    public CategoryService(CategoryRepository categoryRepository, UserService userService) {
+    public CategoryService(CategoryRepository categoryRepository, UserService userService, @Lazy TaskService taskService) {
         this.categoryRepository = categoryRepository;
         this.userService = userService;
+        this.taskService = taskService;
     }
 
     public List<CategoryCombinedWithTask> makeCombinedObject(List<Category> categories, LocalDate parse) {
@@ -90,5 +94,20 @@ public class CategoryService {
             categoryNames.add(category.getName());
         }
         return categoryNames;
+    }
+
+    public void deleteCategoryAndAllTasks(User user, UUID id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category not found"));
+        if (category.getTasks() != null) {
+//            for (Task task : category.getTasks()) {
+//                category.getTasks().remove(task);
+//            }
+            for (int i = category.getTasks().size() - 1; i >= 0; i--) {
+                Task task = category.getTasks().get(i);
+                category.getTasks().remove(task);
+            }
+        }
+        userService.deleteCategory(user, category);
+        categoryRepository.delete(category);
     }
 }

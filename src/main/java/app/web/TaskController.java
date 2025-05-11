@@ -77,7 +77,7 @@ public class TaskController {
         model.addObject("listOfCategories", userById.getCategories());
         model.addObject("priorities", TaskPriority.values());
         model.addObject("status", TaskStatus.values());
-        model.addObject("user",userById);
+        model.addObject("user", userById);
         model.addObject("userTasks", taskService.getTasksByCategory(userById, categoryById));
         model.addObject("taskCountToDo", taskService.getTasksCountByCategory(userById, TaskStatus.NOT_STARTED, categoryById));
         model.addObject("taskCountProgress", taskService.getTasksCountByCategory(userById, TaskStatus.IN_PROGRESS, categoryById));
@@ -86,7 +86,7 @@ public class TaskController {
     }
 
     @PostMapping()
-    public ModelAndView addTask(@AuthenticationPrincipal AuthUser authUser, TaskRequest taskRequest)  {
+    public ModelAndView addTask(@AuthenticationPrincipal AuthUser authUser, TaskRequest taskRequest) {
         ModelAndView model = new ModelAndView();
         model.setViewName("redirect:/tasks");
         User user = userService.getById(authUser.getUserId());
@@ -121,6 +121,12 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-
-
+    @GetMapping("category/delete/{id}")
+    public String deleteCategory(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable UUID id) {
+        User user = userService.getById(authUser.getUserId());
+        categoryService.deleteCategoryAndAllTasks(user, id);
+        return "redirect:/tasks";
+    }
 }

@@ -889,3 +889,16 @@ padding: 1.75rem;
         transform: translateY(0);
     }
 }
+
+.custom-context-menu {
+    position: fixed;
+    display: none;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
