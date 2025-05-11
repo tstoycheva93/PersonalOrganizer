@@ -605,7 +605,15 @@ body {
 .category-color.active {
     color: white;
 }
-
+.chosen {
+    background-color: var(--category-color);
+    /*filter: brightness(1.4);*/
+    transform: scale(1.05); /* леко уголемяване */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* лека сянка */
+    transition: all 0.3s ease;
+    z-index: 1;
+    position: relative;
+}
 
 
 /* Modal styles */

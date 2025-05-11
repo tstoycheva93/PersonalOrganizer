@@ -27,7 +27,7 @@
     text-shadow: 2px 2px 4px rgba(0, 180, 216, 0.2);
 }
 .nav-menu {
-    position: fixed !important;
+    /*position: fixed !important;*/
     list-style: none;
     padding-left: 0!important;
 }

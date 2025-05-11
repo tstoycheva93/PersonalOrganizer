@@ -7,8 +7,7 @@
     <!-- Bootstrap CSS (usually in the <head>) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
-    <meta name="_csrf" content="${_csrf.token}">
-    <meta name="_csrf_header" content="${_csrf.headerName}">
+
     <!-- Bootstrap JS Bundle (required for modal) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -29,11 +28,9 @@
                     <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModal">
                         <span>➕</span> New Category
                     </button>
-
-
-                    <!--                    <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModalDelete">-->
-                    <!--                        <span>➖</span> Delete Category-->
-                    <!--                    </button>-->
+<!--                    <button class="view-btn" data-bs-toggle="modal" data-bs-target="#categoryModalDelete">-->
+<!--                        <span>➖</span> Delete Category-->
+<!--                    </button>-->
                     <form th:action="'/tasks'">
                         <select name="sort" class="sort-dropdown" onchange="this.form.submit()">
                             <option>Sort by</option>
@@ -52,14 +49,17 @@
                     </div>
                 </div>
                 <div class="categories-list">
-                    <a th:each="category : ${listOfCategories}"
-                       th:href="@{'/tasks/category/' + ${category.id}}"
-                       class="category-color"
+                    <a th:href="@{'/tasks'}" style="background: black; color: white">All</a>
+                    <a th:href="@{'/tasks/category/'+ ${category.id}}"
+                       th:each="category : ${listOfCategories}"
+                       th:class="'category-color'"
                        th:data-id="${category.id}"
                        th:data-name="${category.name}"
                        th:style="'--category-color: ' + ${category.color}"
+                       th:text="${category.name}"
+                       th:classappend="${category.id == activeCategoryId ? 'chosen' : ' '}"
                        oncontextmenu="showContextMenu(event, this)">
-                        <span th:text="${category.name}">Category</span>
+                       <span th:text="${category.name}">Category</span>
                     </a>
                 </div>
 
