@@ -301,7 +301,7 @@
                         <div class="toggle-group" id="statusToggle">
                             <div th:each="status : ${status}">
                                 <button type="button" class="toggle-btn"
-                                        th:data-value="${status}" th:text="${status.name()}">
+                                        th:data-value="${status}" th:text="${status.getLabel()}">
                                 </button>
                             </div>
                         </div>
@@ -447,7 +447,7 @@
                                 <button type="button" class="toggle-btn"
                                         th:data-value="${status}"
                                         th:data-name="${status.name()}"
-                                        th:text="${status.name()}">
+                                        th:text="${status.getLabel()}">
                                 </button>
                             </div>
                         </div>
