@@ -229,7 +229,7 @@
                 <div th:class=" 'priority-list-'+ ${#strings.toLowerCase(task.getPriority().name())}"
                      th:text="${task.priority}">Priority
                 </div>
-                <div th:text="${task.status}">Status</div>
+                <div th:text="${task.status.getLabel()}">Status</div>
             </div>
         </div>
 

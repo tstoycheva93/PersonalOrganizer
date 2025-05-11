@@ -6,6 +6,7 @@ import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionType;
 import app.task.model.Task;
 import app.user.model.User;
+import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.web.dto.ForgotPasswordRequest;
 import jakarta.mail.MessagingException;
@@ -62,6 +63,9 @@ public class NotificationService {
             case "all" -> {
                 List<User> users = userService.getAll();
                 for (User user : users) {
+                    if (user.getRole() == UserRole.ADMIN) {
+                        continue;
+                    }
                     String emailBody = buildEmailBody(user.getUsername(), content);
                     helper.setTo(user.getEmail());
                     helper.setSubject(subject);
@@ -249,7 +253,7 @@ public class NotificationService {
         helper.setSubject("New Password");
         helper.setText(emailBody, true);
         mailSender.send(message);
-        userService.setNewPassword(user,password);
+        userService.setNewPassword(user, password);
 
     }
 
