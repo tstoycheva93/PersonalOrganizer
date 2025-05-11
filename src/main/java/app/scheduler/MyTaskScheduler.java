@@ -37,18 +37,18 @@ public class MyTaskScheduler {
         for (Task task : allTask) {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime due = task.getDueDate();
-            if (due.isAfter(now) && task.getStatus() != TaskStatus.COMPLETED) {
-                Notification notification = buildNotificationIfTaskIsNotFinishedOnTime(task);
-                Notification byTask = notificationService.getByTask(task);
-                if (byTask == null) {
-                    saveNotification(task, notification);
-                }
-            }
-            Duration duration = Duration.between(now, due);
+            Duration duration = Duration.between(due, now);
             if (!duration.isNegative() && duration.toMinutes() <= 30) {
                 Notification notification = buildNotificationForTaskThatOnlyLeft30Minutes(task, duration);
                 Notification byTask = notificationService.getByTask(task);
                 if (byTask == null || byTask.getBody().equals("For task %s left only %s minutes".formatted(task.getTitle(), duration.toMinutes()))) {
+                    saveNotification(task, notification);
+                }
+            }
+            if (due.isBefore(now) && task.getStatus() != TaskStatus.COMPLETED) {
+                Notification notification = buildNotificationIfTaskIsNotFinishedOnTime(task);
+                Notification byTask = notificationService.getByTask(task);
+                if (byTask == null) {
                     saveNotification(task, notification);
                 }
             }

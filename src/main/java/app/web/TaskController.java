@@ -77,6 +77,7 @@ public class TaskController {
         model.addObject("listOfCategories", userById.getCategories());
         model.addObject("priorities", TaskPriority.values());
         model.addObject("status", TaskStatus.values());
+        model.addObject("user",userById);
         model.addObject("userTasks", taskService.getTasksByCategory(userById, categoryById));
         model.addObject("taskCountToDo", taskService.getTasksCountByCategory(userById, TaskStatus.NOT_STARTED, categoryById));
         model.addObject("taskCountProgress", taskService.getTasksCountByCategory(userById, TaskStatus.IN_PROGRESS, categoryById));

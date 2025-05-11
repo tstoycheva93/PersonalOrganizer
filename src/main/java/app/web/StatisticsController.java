@@ -52,6 +52,7 @@ public class StatisticsController {
         List<Deadline> upcomingDeadlines = taskService.getTasksIntoDeadlineObject(user);
         taskData.put("upcomingDeadlines", upcomingDeadlines);
         modelAndView.addObject("taskData", taskData);
+        modelAndView.addObject("user",user);
         modelAndView.addObject("page", "Statistics");
         return modelAndView;
     }
