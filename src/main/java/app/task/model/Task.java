@@ -1,6 +1,7 @@
 package app.task.model;
 
 import app.category.model.Category;
+import app.notification.model.Notification;
 import app.recurring_task.model.RecurringTask;
 import app.user.model.User;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity

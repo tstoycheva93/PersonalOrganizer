@@ -3,6 +3,10 @@ package app.task.service;
 import app.category.model.Category;
 import app.category.service.CategoryService;
 import app.exception.*;
+import app.notification.model.Notification;
+import app.notification.service.NotificationService;
+import app.recurring_task.model.RecurringTask;
+import app.recurring_task.model.RecurringTaskType;
 import app.recurring_task.service.RecurringTaskService;
 import app.subscription.model.SubscriptionType;
 import app.task.model.Task;
@@ -14,7 +18,6 @@ import app.user.service.UserService;
 import app.utils.Deadline;
 import app.web.dto.TaskRequest;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +37,15 @@ public class TaskService {
     private final CategoryService categoryService;
     private final RecurringTaskService recurringTaskService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
-    public TaskService(TaskRepository taskRepository, ConversionService conversionService, CategoryService categoryService, RecurringTaskService recurringTaskService, UserService userService) {
+    public TaskService(TaskRepository taskRepository, ConversionService conversionService, CategoryService categoryService, RecurringTaskService recurringTaskService, UserService userService, NotificationService notificationService) {
         this.taskRepository = taskRepository;
         this.conversionService = conversionService;
         this.categoryService = categoryService;
         this.recurringTaskService = recurringTaskService;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -300,5 +305,28 @@ public class TaskService {
 
     public void save(Task task) {
         taskRepository.save(task);
+    }
+
+    public void generateRecurringTask(RecurringTask recurringTask) throws AccessDeniedException {
+        Task originalTask=recurringTask.getTask();
+        LocalDateTime newStartDate = getNextDate(originalTask.getStartDate(),recurringTask.getType());
+        LocalDateTime newDueDate = getNextDate(originalTask.getDueDate(),recurringTask.getType());
+
+        Task buildUpdatedTask = originalTask.toBuilder().startDate(newStartDate).dueDate(newDueDate).build();
+        taskRepository.save(buildUpdatedTask);
+    }
+
+    private LocalDateTime getNextDate(LocalDateTime startDate, RecurringTaskType type) {
+        switch (type) {
+            case DAILY:
+                return startDate.plusDays(1);
+            case WEEKLY:
+                return startDate.plusWeeks(1);
+            case MONTHLY:
+                return startDate.plusMonths(1);
+            default:
+                throw new IllegalArgumentException("Unknown recurring type: " + type);
+
+        }
     }
 }
